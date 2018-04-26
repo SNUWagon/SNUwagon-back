@@ -14,7 +14,7 @@ before_scripts:
   - psql -c 'create database travis_ci_db;' -U postgres
 
 script:
-  - ci.sh
+  - ./ci.sh
 
 after_success:
   - coveralls
