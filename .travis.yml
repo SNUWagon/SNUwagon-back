@@ -17,4 +17,4 @@ script:
   - ./ci.sh
 
 after_success:
-  - coveralls
+  - codecov

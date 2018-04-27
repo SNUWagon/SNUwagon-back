@@ -1,6 +1,8 @@
 # SNUwagon
 
-[![Build Status](https://travis-ci.org/SNUWagon/SNUwagon-back.svg?branch=master)](https://travis-ci.org/SNUWagon/SNUwagon-back) [![Coverage Status](https://coveralls.io/repos/github/SNUWagon/SNUwagon-back/badge.svg?branch=master)](https://coveralls.io/github/SNUWagon/SNUwagon-back?branch=master)
+[![Build Status](https://travis-ci.org/SNUWagon/SNUwagon-back.svg?branch=master)](https://travis-ci.org/SNUWagon/SNUwagon-back)  [![codecov](https://codecov.io/gh/SNUWagon/SNUwagon-back/branch/master/graph/badge.svg)](https://codecov.io/gh/SNUWagon/SNUwagon-back)
+
+
 
 SNUwagon backend
 

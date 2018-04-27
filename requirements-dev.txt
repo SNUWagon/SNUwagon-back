@@ -3,3 +3,4 @@ flake8
 coverage
 coveralls
 pyyaml
+codecov
