@@ -10,6 +10,8 @@ Check you have downloaded `.coveralls.yml`, `init_db.sh`, `set_env.sh`
 
 ```
 # execute only for the first time
+# if peer authenticate error occurs,
+# fix pg_hba.conf (peer -> trust)
 ./init_db.sh
 
 # execute on each login
