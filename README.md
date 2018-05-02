@@ -4,11 +4,11 @@
 
 
 
-SNUwagon backend
+SNUwagon backend (frontend repository is [here](https://github.com/SNUWagon/SNUwagon-front))
 
 ## Local setting
 
-Check you have downloaded `.coveralls.yml`, `init_db.sh`, `set_env.sh`
+Check you have downloaded `init_db.sh`, `set_env.sh`
 
 ```
 # execute only for the first time
