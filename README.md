@@ -26,10 +26,19 @@ cp pre-commit .git/hooks/
 
 ```
 python manage.py runserver
+
+# without authentication
+NO_AUTH=True python manage.py runserver
 ```
 
-## Testing (CI / coverage)
-
+## Testing
 ```
+# syntax coverage test
 ./ci.sh
+
+# API test with swagger
+# Note : django-swagger 2.x deprecated YAML parsing, so POST parameter cannot be sent using swagger
+#        Therefore, to test POST request, try use Postman (need to use NO_AUTH option with it)
+
+http://localhost:8000/swagger
 ```

@@ -24,6 +24,7 @@ SECRET_KEY = '+h_nvwmp@d3c)i1pnwaawzue_&p^8%gnfyl@#mn784z*lf=o7j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') or True
+NO_AUTH = os.environ.get('NO_AUTH') or False
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +42,23 @@ INSTALLED_APPS = [
     # restframework
     'rest_framework',
     'rest_framework_swagger',
+
+    # apps
+    'api',
 ]
+
+REST_FRAMEWORK = {
+    # Parser classes priority-wise for Swagger
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ],
+
+}
+
+if NO_AUTH:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = []
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
