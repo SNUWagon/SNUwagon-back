@@ -18,6 +18,8 @@ Check you have downloaded `init_db.sh`, `set_env.sh`
 
 # execute on each login
 source ./set_env.sh
+
+cp pre-commit .git/hooks/
 ```
 
 ## Run
