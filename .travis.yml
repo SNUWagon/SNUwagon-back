@@ -10,8 +10,9 @@ services:
 install:
   - pip install -r requirements-dev.txt
 
-before_scripts:
+before_script:
   - psql -c 'create database travis_ci_db;' -U postgres
+  - ./manage.py migrate api
   - ./manage.py migrate
 
 script:
