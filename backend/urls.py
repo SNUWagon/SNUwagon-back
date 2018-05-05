@@ -15,7 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
+from django.conf import settings
+from rest_framework_swagger.views import get_swagger_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url(r'^api/', include('api.urls'))
 ]
+
+if settings.DEBUG:
+    schema_view = get_swagger_view(title='SNUwagon API')
+    urlpatterns.append(
+        url(r'^swagger$', schema_view)
+    )
+    urlpatterns.append(
+        path('admin/', admin.site.urls)
+    )
