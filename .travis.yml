@@ -12,6 +12,7 @@ install:
 
 before_scripts:
   - psql -c 'create database travis_ci_db;' -U postgres
+  - ./manage.py migrate
 
 script:
   - ./ci.sh
