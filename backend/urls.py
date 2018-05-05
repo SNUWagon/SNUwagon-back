@@ -17,17 +17,29 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from django.conf import settings
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 urlpatterns = [
     url(r'^api/', include('api.urls'))
 ]
 
 if settings.DEBUG:
-    schema_view = get_swagger_view(title='SNUwagon API')
-    urlpatterns.append(
-        url(r'^swagger$', schema_view)
+    schema_view = get_schema_view(
+        openapi.Info(
+            title='SNUwagon API',
+            default_version='v1',
+        ),
     )
+    urlpatterns.append(url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'))
+    urlpatterns.append(url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'))
+    urlpatterns.append(url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'))
+
+    # schema_view = get_swagger_view(title='SNUwagon API')
+    # urlpatterns.append(
+    #     url(r'^swagger$', schema_view)
+    # )
     urlpatterns.append(
         path('admin/', admin.site.urls)
     )
