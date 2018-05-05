@@ -1,10 +1,10 @@
 from django.db import models
 from django.db.utils import Error
-from django.contrib.auth.models import User as BaseUser
+from django.contrib.auth.models import User
 
 
-class User(models.Model):
-    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     credit = models.IntegerField(default=100)
     created = models.DateTimeField(auto_created=True, auto_now=True)
 
@@ -12,14 +12,18 @@ class User(models.Model):
 # base create_user wrapper
 def create_user(**kwargs):
     try:
-        user = BaseUser.objects.create_user(
+
+        if len(User.objects.filter(email=kwargs['email'])) > 0:
+            return None
+
+        user = User.objects.create_user(
             username=kwargs['username'],
             password=kwargs['password'],
             email=kwargs['email'],
             is_active=True,
         )
 
-        new_user = User.objects.create(
+        new_user = Profile.objects.create(
             user=user,
         )
 
