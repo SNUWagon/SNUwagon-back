@@ -1,12 +1,15 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
+from drf_yasg import openapi
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from api.models import Profile, create_user
 from api.serializers import UserSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(methods=['post'], request_body=UserSerializer)
 @api_view(['POST'])
 def signin(request):
 
@@ -22,6 +25,7 @@ def signin(request):
             return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+@swagger_auto_schema(methods=['post'], request_body=UserSerializer)
 @api_view(['POST'])
 def signup(request):
 
