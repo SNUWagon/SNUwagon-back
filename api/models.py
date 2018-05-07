@@ -56,11 +56,13 @@ class InformationPost(models.Model):
     hidden_content_cost = models.IntegerField()
     sponsor_credit = models.IntegerField()
 
+
 class QuestionAnswer(models.Model):
     content = models.TextField()
     author = models.ForeignKey('Profile', related_name='answers_as_writer', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     question = models.ForeignKey('QuestionPost', related_name='answers', on_delete=models.CASCADE)
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
@@ -68,10 +70,12 @@ class Tag(models.Model):
     question = models.ForeignKey('QuestionPost', related_name='tags', on_delete=models.CASCADE)
     information = models.ForeignKey('InformationPost', related_name='tags', on_delete=models.CASCADE)
 
+
 class BoughtInformation(models.Model):
     user = models.ForeignKey('Profile', related_name='bought_informations', on_delete=models.CASCADE)
     post = models.ForeignKey('InformationPost', related_name='buyers', on_delete=models.CASCADE)
     cost = models.IntegerField()
+
 
 class Vote(models.Model):
     vote_type = models.CharField(max_length=100)
@@ -79,4 +83,3 @@ class Vote(models.Model):
     post = models.ForeignKey('InformationPost', related_name='votes', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     weight = models.IntegerField()
-
