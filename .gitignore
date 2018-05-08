@@ -231,3 +231,6 @@ tags
 .coveralls.yml
 init_db.sh
 set_env.sh
+
+# other
+.DS_Store
