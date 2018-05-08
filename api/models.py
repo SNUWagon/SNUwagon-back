@@ -34,24 +34,63 @@ def create_user(**kwargs):
 
 
 class QuestionPost(models.Model):
-    pass
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    author = models.ForeignKey('Profile', related_name='questions_as_writer',
+                               on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    due = models.DateTimeField()
+    resolved = models.BooleanField()
+    bounty = models.IntegerField()
+    question_type = models.CharField(max_length=100)
+    selected = models.ForeignKey('QuestionAnswer', related_name='selected_question',
+                                 on_delete=models.SET_NULL, null=True)
 
 
 class InformationPost(models.Model):
-    pass
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    author = models.ForeignKey('Profile', related_name='informations_as_writer',
+                               on_delete=models.CASCADE)
+    hidden_exist = models.BooleanField()
+    hidden_content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    due = models.DateTimeField()
+    hidden_content_cost = models.IntegerField()
+    sponsor_credit = models.IntegerField()
 
 
 class QuestionAnswer(models.Model):
-    pass
+    content = models.TextField()
+    author = models.ForeignKey('Profile', related_name='answers_as_writer',
+                               on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    question = models.ForeignKey('QuestionPost', related_name='answers',
+                                 on_delete=models.CASCADE)
 
 
 class Tag(models.Model):
-    pass
+    name = models.CharField(max_length=100)
+    tag_type = models.CharField(max_length=100)
+    question = models.ForeignKey('QuestionPost', related_name='tags',
+                                 on_delete=models.SET_NULL, null=True)
+    information = models.ForeignKey('InformationPost', related_name='tags',
+                                    on_delete=models.SET_NULL, null=True)
 
 
 class BoughtInformation(models.Model):
-    pass
+    user = models.ForeignKey('Profile', related_name='bought_informations',
+                             on_delete=models.CASCADE)
+    post = models.ForeignKey('InformationPost', related_name='buyers',
+                             on_delete=models.CASCADE)
+    cost = models.IntegerField()
 
 
 class Vote(models.Model):
-    pass
+    vote_type = models.CharField(max_length=100)
+    user = models.ForeignKey('Profile', related_name='votes',
+                             on_delete=models.CASCADE)
+    post = models.ForeignKey('InformationPost', related_name='votes',
+                             on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    weight = models.IntegerField()
