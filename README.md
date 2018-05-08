@@ -20,6 +20,7 @@ Check you have downloaded `init_db.sh`, `set_env.sh`
 source ./set_env.sh
 
 cp pre-commit .git/hooks/
+chmod +x .git/hooks/pre-commit
 ```
 
 ## Run

@@ -32,9 +32,12 @@ if settings.DEBUG:
             default_version='v1',
         ),
     )
-    urlpatterns.append(url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'))
-    urlpatterns.append(url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'))
-    urlpatterns.append(url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'))
+    urlpatterns.append(url(r'^swagger(?P<format>\.json|\.yaml)$',
+                           schema_view.without_ui(cache_timeout=None), name='schema-json'))
+    urlpatterns.append(url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None),
+                           name='schema-swagger-ui'))
+    urlpatterns.append(url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None),
+                           name='schema-redoc'))
 
     # schema_view = get_swagger_view(title='SNUwagon API')
     # urlpatterns.append(
