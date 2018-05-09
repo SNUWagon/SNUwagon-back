@@ -60,6 +60,10 @@ REST_FRAMEWORK = {
 
 if NO_AUTH:
     REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = []
+else:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
