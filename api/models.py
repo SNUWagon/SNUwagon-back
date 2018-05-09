@@ -40,7 +40,7 @@ class QuestionPost(models.Model):
                                on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     due = models.DateTimeField()
-    resolved = models.BooleanField()
+    resolved = models.BooleanField(default=False)
     bounty = models.IntegerField()
     question_type = models.CharField(max_length=100)
     selected = models.ForeignKey('QuestionAnswer', related_name='selected_question',

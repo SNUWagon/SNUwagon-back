@@ -7,9 +7,10 @@ from rest_framework.response import Response
 from api.models import Profile, create_user
 from api.serializers import UserSerializer
 from drf_yasg.utils import swagger_auto_schema
+from utils.response import generate_response
 
 
-@swagger_auto_schema(methods=['post'], request_body=UserSerializer)
+@swagger_auto_schema(methods=['post'], request_body=UserSerializer, responses={201: 'success'})
 @api_view(['POST'])
 def signin(request):
 
@@ -20,12 +21,12 @@ def signin(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return Response({'success': True}, status=status.HTTP_200_OK)
+            return generate_response(status=status.HTTP_200_OK)
         else:
-            return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
+            return generate_response(message='Username or password is wrong', status=status.HTTP_401_UNAUTHORIZED)
 
 
-@swagger_auto_schema(methods=['post'], request_body=UserSerializer)
+@swagger_auto_schema(methods=['post'], request_body=UserSerializer, responses={201: 'success'})
 @api_view(['POST'])
 def signup(request):
 
@@ -35,13 +36,13 @@ def signup(request):
         email = request.data.get('email', None)
 
         if not (username and password and email):
-            return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
+            return generate_response(message='Parameters are not given', status=status.HTTP_401_UNAUTHORIZED)
 
         success = create_user(username=username, password=password, email=email)
         if not success:
-            return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
+            return generate_response(message='Duplicate username or email', status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response({'success': True}, status=status.HTTP_201_CREATED)
+        return generate_response(status=status.HTTP_201_CREATED)
 
 
 # commented out while not used
