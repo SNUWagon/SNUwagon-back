@@ -2,7 +2,7 @@ import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import authenticate
-from .models import Profile, create_user, QuestionPost
+from .models import Profile, create_user, QuestionPost, User
 
 
 # put model tests here
@@ -20,6 +20,12 @@ class ModelTests(TestCase):
 
         success = authenticate(username='testuser', password='NOTuserpassword')
         self.assertEqual(success, None)
+
+    def test_Profile_model(self):
+        user = User.objects.get(username='testuser')
+        profile = Profile.objects.filter(user=user)
+
+        self.assertNotEqual(len(profile), 0)
 
 
 # Api tests
@@ -117,6 +123,11 @@ class ApiSignUpTests(TestCase):
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 401)
+
+
+class ApiUserInfoTests(TestCase):
+    # TODO: Implement
+    pass
 
 
 class QuestionPostTests(TestCase):

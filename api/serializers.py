@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')
+        fields = ('id', 'username', 'password', 'email')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -26,8 +26,8 @@ class UserProfileSerializer(serializers.BaseSerializer):
     def to_representation(self, instance):
         user = UserSerializer(instance)
         serialized_user = user.data
-        profile = Profile.objects.get(instance)
-        serialized_profile = ProfileSerializer(profile)
+        profile = Profile.objects.get(user=instance)
+        serialized_profile = ProfileSerializer(profile).data
 
         serialized_user.pop('password')
         serialized_user.update(serialized_profile)
