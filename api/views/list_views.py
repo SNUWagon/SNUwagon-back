@@ -1,11 +1,18 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from utils.response import generate_response
+from api.serializers import QuestionPostSerializer, InformationPostSerializer
+from api.models import QuestionPost, Profile, User, InformationPost
 
 
+@swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @api_view(['GET'])
 def questions(request):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_questions = QuestionPost.objects.all()
+    serializer = QuestionPostSerializer(every_questions, many=True)
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -23,9 +30,12 @@ def questions_with_title(request, title):
     return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 
+@swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @api_view(['GET'])
 def informations(request):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_informations = InformationPost.objects.all()
+    serializer = InformationPostSerializer(every_informations, many=True)
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
