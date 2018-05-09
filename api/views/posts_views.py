@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from api.serializers import QuestionPostSerializer
 from api.models import QuestionPost, Profile, User
 from django.db.utils import Error
+from drf_yasg.utils import swagger_auto_schema
 
 
 @api_view(['GET'])
@@ -11,6 +12,7 @@ def index(request):
     return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 
+@swagger_auto_schema(methods=['get', 'post'], request_body=QuestionPostSerializer)
 @api_view(['GET', 'POST', 'DELETE'])
 def question(request, id=None):
 
