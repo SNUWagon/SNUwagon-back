@@ -132,7 +132,7 @@ class QuestionPostTests(TestCase):
         data = {
             'title': 'testtitle11',
             'content': 'testcontent11',
-            'user_name': 'testuser',
+            'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
             'resolved': False,
             'bounty': 100,
@@ -157,7 +157,7 @@ class QuestionPostTests(TestCase):
         data = {
             'title': 'testtitle22',
             'content': 'testcontent22',
-            'user_name': 'testuser',
+            'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
             'resolved': False,
             'bounty': 100,
