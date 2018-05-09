@@ -1,6 +1,11 @@
 
 # Created by https://www.gitignore.io/api/vim,python,django,pycharm,sublimetext
 
+### macOS ###
+*.DS_Store
+.AppleDouble
+.LSOverride
+
 ### Django ###
 **/migrations/*
 *.log
