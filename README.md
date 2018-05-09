@@ -20,6 +20,7 @@ Check you have downloaded `init_db.sh`, `set_env.sh`
 source ./set_env.sh
 
 cp pre-commit .git/hooks/
+chmod +x .git/hooks/pre-commit
 ```
 
 ## Run
@@ -37,8 +38,22 @@ NO_AUTH=True python manage.py runserver
 ./ci.sh
 
 # API test with swagger
-# Note : django-swagger 2.x deprecated YAML parsing, so POST parameter cannot be sent using swagger
-#        Therefore, to test POST request, try use Postman (need to use NO_AUTH option with it)
+http://localhost:8000/swagger/
+```
 
-http://localhost:8000/swagger
+## Swagger Guide
+
+We use [drf-yasg](https://github.com/axnsan12/drf-yasg/) for managing REST API.
+
+drf-yasg uses Swagger and OpenAPI.
+
+```python
+from drf_yasg.utils import swagger_auto_schema
+
+# add swagger decorator on each view
+# See: https://github.com/axnsan12/drf-yasg/blob/master/docs/custom_spec.rst
+@swagger_auto_schema(methods=['post'], request_body=UserSerializer)
+@api_view(['POST'])
+def signin(request):
+  ...
 ```
