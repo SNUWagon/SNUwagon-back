@@ -126,8 +126,34 @@ class ApiSignUpTests(TestCase):
 
 
 class ApiUserInfoTests(TestCase):
-    # TODO: Implement
-    pass
+
+    def setUp(self):
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com')
+
+    def test_get_userinfo_success(self):
+        client = Client()
+        user = User.objects.get(username='testuser')
+        userid = user.id
+
+        path = reverse('user_info', kwargs={'id': userid})
+        response = client.get(path=path,
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(response.content.decode())
+        self.assertEqual(response_json['data']['username'], 'testuser')
+
+    def test_get_userinfo_fail(self):
+        client = Client()
+
+        path = reverse('user_info', kwargs={'id': 0})
+        response = client.get(path=path,
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
 
 
 class QuestionPostTests(TestCase):
