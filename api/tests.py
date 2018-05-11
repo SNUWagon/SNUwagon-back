@@ -2,7 +2,7 @@ import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import authenticate
-from .models import Profile, create_user, QuestionPost, InformationPost
+from .models import Profile, create_user, QuestionPost, InformationPost, User
 
 
 # put model tests here
@@ -20,6 +20,12 @@ class ModelTests(TestCase):
 
         success = authenticate(username='testuser', password='NOTuserpassword')
         self.assertEqual(success, None)
+
+    def test_Profile_model(self):
+        user = User.objects.get(username='testuser')
+        profile = Profile.objects.filter(user=user)
+
+        self.assertNotEqual(len(profile), 0)
 
 
 # Api tests
@@ -117,6 +123,37 @@ class ApiSignUpTests(TestCase):
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 401)
+
+
+class ApiUserInfoTests(TestCase):
+
+    def setUp(self):
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com')
+
+    def test_get_userinfo_success(self):
+        client = Client()
+        user = User.objects.get(username='testuser')
+        userid = user.id
+
+        path = reverse('user_info', kwargs={'id': userid})
+        response = client.get(path=path,
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(response.content.decode())
+        self.assertEqual(response_json['data']['username'], 'testuser')
+
+    def test_get_userinfo_fail(self):
+        client = Client()
+
+        path = reverse('user_info', kwargs={'id': 0})
+        response = client.get(path=path,
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
 
 
 class QuestionPostTests(TestCase):
