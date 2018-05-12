@@ -37,7 +37,7 @@ def question(request, id=None):
         serializer = QuestionPostSerializer(data=mutable_data)
         if serializer.is_valid():
             serializer.save()
-            return generate_response(status=status.HTTP_201_CREATED)
+            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
@@ -75,7 +75,7 @@ def information(request, id=None):
         serializer = InformationPostSerializer(data=mutable_data)
         if serializer.is_valid():
             serializer.save()
-            return generate_response(status=status.HTTP_201_CREATED)
+            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
         return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':
