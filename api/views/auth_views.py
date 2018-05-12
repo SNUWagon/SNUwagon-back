@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from drf_yasg import openapi
 from rest_framework import status
@@ -43,6 +43,15 @@ def signup(request):
             return generate_response(message='Duplicate username or email', status=status.HTTP_401_UNAUTHORIZED)
 
         return generate_response(status=status.HTTP_201_CREATED)
+
+
+@swagger_auto_schema(methods=['get'], responses={200, 'success'})
+@api_view(['GET'])
+def signout(request):
+
+    if request.method == 'GET':
+        logout(request)
+        return generate_response(status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: UserProfileSerializer})
