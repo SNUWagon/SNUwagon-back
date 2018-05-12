@@ -15,6 +15,7 @@ def index(request):
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=QuestionPostSerializer, responses={201: 'success'})
+@swagger_auto_schema(methods=['delete'], responses={204: 'success'})
 @api_view(['GET', 'POST', 'DELETE'])
 def question(request, id=None):
 
@@ -40,12 +41,21 @@ def question(request, id=None):
         return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':
-        return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+        # Check if corresponding question exists
+        results = QuestionPost.objects.filter(pk=id)
+        if(results.count() < 1):
+            return generate_response(message='No such question found',
+                                     status=status.HTTP_400_BAD_REQUEST)
+
+        results.delete()
+        return generate_response(message='Question deleted', status=status.HTTP_204_NO_CONTENT)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=InformationPostSerializer, responses={201: 'success'})
-@api_view(['GET', 'POST'])
+@swagger_auto_schema(methods=['delete'], responses={204: 'success'})
+@api_view(['GET', 'POST', 'DELETE'])
 def information(request, id=None):
 
     if request.method == 'GET':
@@ -68,4 +78,12 @@ def information(request, id=None):
         return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':
-        return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+        # Check if corresponding information exists
+        results = InformationPost.objects.filter(pk=id)
+        if(results.count() < 1):
+            return generate_response(message='No such information found',
+                                     status=status.HTTP_400_BAD_REQUEST)
+
+        results.delete()
+        return generate_response(message='Information deleted', status=status.HTTP_204_NO_CONTENT)
