@@ -45,7 +45,7 @@ def question(request, id=None):
 
         # Check if corresponding question exists
         results = QuestionPost.objects.filter(pk=id)
-        if(results.count() < 1):
+        if results.count() < 1:
             return generate_response(message='No such question found',
                                      status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,7 +82,7 @@ def information(request, id=None):
 
         # Check if corresponding information exists
         results = InformationPost.objects.filter(pk=id)
-        if(results.count() < 1):
+        if results.count() < 1:
             return generate_response(message='No such information found',
                                      status=status.HTTP_400_BAD_REQUEST)
 

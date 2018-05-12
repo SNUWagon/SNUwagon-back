@@ -125,6 +125,22 @@ class ApiSignUpTests(TestCase):
         self.assertEqual(response.status_code, 401)
 
 
+class ApiSignOutTests(TestCase):
+
+    def setUp(self):
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com')
+
+    def test_logout(self):
+        client = Client()
+        path = reverse('sign_out')
+        response = client.get(path=path,
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+
 class ApiUserInfoTests(TestCase):
 
     def setUp(self):
@@ -211,7 +227,7 @@ class QuestionPostTests(TestCase):
         response = client.post(path=path,
                                data=json.dumps(data),
                                content_type='application/json')
-        print(response.data)
+
         self.assertEqual(response.status_code, 201)
 
     def test_delete_question(self):
