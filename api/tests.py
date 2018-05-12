@@ -171,7 +171,6 @@ class QuestionPostTests(TestCase):
             'content': 'testcontent11',
             'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
-            'resolved': False,
             'bounty': 100,
             'question_type': 'private'
         }
@@ -204,7 +203,6 @@ class QuestionPostTests(TestCase):
             'content': 'testcontent22',
             'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
-            'resolved': False,
             'bounty': 100,
             'question_type': 'private'
         }
@@ -348,7 +346,6 @@ class QuestionListTests(TestCase):
             'content': 'testcontent11',
             'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
-            'resolved': False,
             'bounty': 100,
             'question_type': 'private'
         }

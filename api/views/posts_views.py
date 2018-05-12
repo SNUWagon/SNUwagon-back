@@ -32,6 +32,7 @@ def question(request, id=None):
         user = User.objects.get(username=request.data['username'])
         profile = Profile.objects.get(user=user)
         mutable_data['author'] = profile.id
+        mutable_data['resolved'] = False
 
         serializer = QuestionPostSerializer(data=mutable_data)
         if serializer.is_valid():
