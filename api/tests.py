@@ -216,6 +216,33 @@ class QuestionPostTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
+    def test_delete_question(self):
+        client = Client()
+        data = {}
+
+        # Check for invalid delete
+        path = reverse('question_posts')
+        path = path + '/' + str(100)
+        response = client.delete(path=path,
+                                 data=json.dumps(data),
+                                 content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        # Choose any valid id
+        every_questions = QuestionPost.objects.all()
+        question_id = 0
+        for x in every_questions:
+            question_id = x.id
+
+        # Check for valid delete
+        path = reverse('question_posts')
+        path = path + '/' + str(question_id)
+
+        response = client.delete(path=path,
+                                 data=json.dumps(data),
+                                 content_type='application/json')
+        self.assertEqual(response.status_code, 204)
+
 
 class InformationPostTests(TestCase):
 
@@ -277,6 +304,33 @@ class InformationPostTests(TestCase):
                                content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
+
+    def test_delete_information(self):
+        client = Client()
+        data = {}
+
+        # Check for invalid delete
+        path = reverse('information_posts')
+        path = path + '/' + str(100)
+        response = client.delete(path=path,
+                                 data=json.dumps(data),
+                                 content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        # Choose any valid id
+        every_informations = InformationPost.objects.all()
+        information_id = 0
+        for x in every_informations:
+            information_id = x.id
+
+        # Check for valid delete
+        path = reverse('information_posts')
+        path = path + '/' + str(information_id)
+
+        response = client.delete(path=path,
+                                 data=json.dumps(data),
+                                 content_type='application/json')
+        self.assertEqual(response.status_code, 204)
 
 
 class QuestionListTests(TestCase):
