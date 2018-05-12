@@ -211,7 +211,7 @@ class QuestionPostTests(TestCase):
         response = client.post(path=path,
                                data=json.dumps(data),
                                content_type='application/json')
-
+        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_delete_question(self):
