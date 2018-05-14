@@ -45,7 +45,7 @@ def signup(request):
         return generate_response(status=status.HTTP_201_CREATED)
 
 
-@swagger_auto_schema(methods=['get'], responses={200, 'success'})
+@swagger_auto_schema(methods=['get'], responses={200: 'success'})
 @api_view(['GET'])
 def signout(request):
 
