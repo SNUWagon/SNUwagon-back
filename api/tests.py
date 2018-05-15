@@ -255,7 +255,7 @@ class QuestionPostTests(TestCase):
         response = client.delete(path=path,
                                  data=json.dumps(data),
                                  content_type='application/json')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
 
 class InformationPostTests(TestCase):
@@ -344,7 +344,7 @@ class InformationPostTests(TestCase):
         response = client.delete(path=path,
                                  data=json.dumps(data),
                                  content_type='application/json')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
 
 class QuestionListTests(TestCase):
