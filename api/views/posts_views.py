@@ -23,7 +23,13 @@ def question(request, id=None):
         try:
             question_object = QuestionPost.objects.get(pk=id)
             serializer = QuestionPostSerializer(question_object)
-            return generate_response(serializer.data, status=status.HTTP_200_OK)
+
+            # return author name for 'author' field
+            mutable_data = serializer.data.copy()
+            author = Profile.objects.get(pk=mutable_data['author'])
+            mutable_data['author'] = author.user.username
+
+            return generate_response(mutable_data, status=status.HTTP_200_OK)
         except Exception as e:
             return generate_response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -63,6 +69,12 @@ def information(request, id=None):
         try:
             information_object = InformationPost.objects.get(pk=id)
             serializer = InformationPostSerializer(information_object)
+
+            # return author name for 'author' field
+            mutable_data = serializer.data.copy()
+            author = Profile.objects.get(pk=mutable_data['author'])
+            mutable_data['author'] = author.user.username
+
             return generate_response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return generate_response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
