@@ -56,7 +56,7 @@ def question(request, id=None):
                                      status=status.HTTP_400_BAD_REQUEST)
 
         results.delete()
-        return generate_response(message='Question deleted', status=status.HTTP_204_NO_CONTENT)
+        return generate_response(message='Question deleted', status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
@@ -99,4 +99,4 @@ def information(request, id=None):
                                      status=status.HTTP_400_BAD_REQUEST)
 
         results.delete()
-        return generate_response(message='Information deleted', status=status.HTTP_204_NO_CONTENT)
+        return generate_response(message='Information deleted', status=status.HTTP_200_OK)
