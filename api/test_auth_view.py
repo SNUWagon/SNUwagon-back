@@ -5,18 +5,6 @@ from django.contrib.auth import authenticate
 from .models import Profile, create_user, QuestionPost, InformationPost, User
 
 
-def login(client):
-    data = {
-        'username': 'testuser',
-        'password': 'userpassword'
-    }
-
-    path = reverse('sign_in')
-    client.post(path=path,
-                data=json.dumps(data),
-                content_type='application/json')
-
-
 class ApiSignInTests(TestCase):
 
     # put default settings in here
