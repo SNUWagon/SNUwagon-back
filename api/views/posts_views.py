@@ -19,7 +19,12 @@ def index(request):
 @api_view(['GET', 'POST', 'DELETE'])
 def question(request, id=None):
 
+    # Check user login
+    if not request.user.is_authenticated:
+        return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'GET':
+
         try:
             question_object = QuestionPost.objects.get(pk=id)
             serializer = QuestionPostSerializer(question_object)
@@ -65,6 +70,10 @@ def question(request, id=None):
 @api_view(['GET', 'POST', 'DELETE'])
 def information(request, id=None):
 
+    # Check user login
+    # if not request.user.is_authenticated:
+    #    return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'GET':
         try:
             information_object = InformationPost.objects.get(pk=id)
@@ -76,15 +85,19 @@ def information(request, id=None):
             mutable_data['author'] = author.user.username
 
             return generate_response(serializer.data, status=status.HTTP_200_OK)
+
         except Exception as e:
             return generate_response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     if request.method == 'POST':
         mutable_data = request.data.copy()
+
         user = User.objects.get(username=request.data['username'])
         profile = Profile.objects.get(user=user)
         mutable_data['author'] = profile.id
+
         serializer = InformationPostSerializer(data=mutable_data)
+
         if serializer.is_valid():
             serializer.save()
             return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)

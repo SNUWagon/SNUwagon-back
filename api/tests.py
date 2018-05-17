@@ -5,6 +5,18 @@ from django.contrib.auth import authenticate
 from .models import Profile, create_user, QuestionPost, InformationPost, User
 
 
+def login(client):
+    data = {
+        'username': 'testuser',
+        'password': 'userpassword'
+    }
+
+    path = reverse('sign_in')
+    client.post(path=path,
+                data=json.dumps(data),
+                content_type='application/json')
+
+
 # put model tests here
 class ModelTests(TestCase):
 
@@ -181,6 +193,7 @@ class QuestionPostTests(TestCase):
 
         # Let's create a sample QuestionPost
         client = Client()
+        login(client)
 
         data = {
             'title': 'testtitle11',
@@ -198,6 +211,7 @@ class QuestionPostTests(TestCase):
 
     def test_get_question(self):
         client = Client()
+        login(client)
 
         # Choose any valid id
         every_questions = QuestionPost.objects.all()
@@ -213,6 +227,7 @@ class QuestionPostTests(TestCase):
 
     def test_create_question(self):
         client = Client()
+        login(client)
 
         data = {
             'title': 'testtitle22',
@@ -232,6 +247,8 @@ class QuestionPostTests(TestCase):
 
     def test_delete_question(self):
         client = Client()
+        login(client)
+
         data = {}
 
         # Check for invalid delete
@@ -267,6 +284,7 @@ class InformationPostTests(TestCase):
 
         # Let's create a sample InformationPost
         client = Client()
+        login(client)
 
         data = {
             'title': 'testtitle11',
@@ -286,6 +304,7 @@ class InformationPostTests(TestCase):
 
     def test_get_information(self):
         client = Client()
+        login(client)
 
         # Choose any valid id
         every_informations = InformationPost.objects.all()
@@ -301,6 +320,8 @@ class InformationPostTests(TestCase):
 
     def test_create_information(self):
         client = Client()
+        login(client)
+
         data = {
             'title': 'testtitle11',
             'content': 'testcontent11',
@@ -321,6 +342,8 @@ class InformationPostTests(TestCase):
 
     def test_delete_information(self):
         client = Client()
+        login(client)
+
         data = {}
 
         # Check for invalid delete
