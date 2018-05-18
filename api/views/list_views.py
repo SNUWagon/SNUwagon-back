@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer
 from api.models import QuestionPost, Profile, User, InformationPost
+from django.utils.timezone import datetime
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
@@ -16,6 +17,7 @@ def questions(request):
     # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
+
     return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 

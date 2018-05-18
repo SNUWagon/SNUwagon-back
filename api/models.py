@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    credit = models.IntegerField(default=100)
+    credit = models.IntegerField(default=1000)
     created = models.DateTimeField(auto_created=True, auto_now=True)
 
 
@@ -70,7 +70,7 @@ class QuestionAnswer(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     tag_type = models.CharField(max_length=100)
     question = models.ForeignKey('QuestionPost', related_name='tags',
                                  on_delete=models.SET_NULL, null=True)
