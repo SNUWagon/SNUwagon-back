@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from api.serializers import QuestionPostSerializer, InformationPostSerializer
+from api.serializers import QuestionPostSerializer, InformationPostSerializer, QuestionAnswerSerializer
 from api.models import QuestionPost, Profile, User, InformationPost
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
@@ -62,6 +62,18 @@ def question(request, id=None):
 
         results.delete()
         return generate_response(message='Question deleted', status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(methods=['get'], responses={200: QuestionAnswerSerializer})
+@swagger_auto_schema(methods=['post'], request_body=QuestionAnswerSerializer, respnses={201: 'success'})
+@api_view(['GET', 'POST'])
+def answer(request, id=None):
+
+    if request.method == 'GET':
+        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
+
+    if request.method == 'POST':
+        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
