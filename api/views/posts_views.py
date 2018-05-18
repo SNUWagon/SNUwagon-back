@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer, QuestionAnswerSerializer
-from api.models import QuestionPost, Profile, User, InformationPost
+from api.models import QuestionPost, Profile, User, InformationPost, QuestionAnswer
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
@@ -78,10 +78,25 @@ def question(request, id=None):
 def answer(request, id=None):
 
     if request.method == 'GET':
-        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
+        answers = QuestionAnswer.objects.filter(question=id)
+        serializer = QuestionAnswerSerializer(answers, many=True)
+        return generate_response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'POST':
-        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
+
+        mutable_data = request.data.copy()
+
+        mutable_data['question'] = mutable_data['qid']
+        user = User.objects.get(username=request.data['username'])
+        mutable_data['author'] = Profile.objects.get(user=user).id
+
+        serializer = QuestionAnswerSerializer(data=mutable_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+        return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})

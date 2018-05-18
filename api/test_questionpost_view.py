@@ -124,3 +124,30 @@ class QuestionPostTests(TestCase):
                                  data=json.dumps(data),
                                  content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+    def test_answer(self):
+        client = Client()
+        login(client)
+
+        qid = get_any_valid_id()
+
+        data = {
+            'content': 'testcontent22',
+            'username': 'testuser',
+        }
+        data['qid'] = qid
+
+        path = reverse('question_answers')
+
+        # create 3 answers
+        for i in range(3):
+            response = client.post(path=path,
+                                   data=json.dumps(data),
+                                   content_type='application/json')
+            self.assertEqual(response.status_code, 201)
+
+        # test if we can retrieve answers
+        path = reverse('question_answers')
+        path = path + '/' + str(qid)
+        data = {}
+        response = client.get(path=path)
