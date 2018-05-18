@@ -78,10 +78,26 @@ def question(request, id=None):
 def answer(request, id=None):
 
     if request.method == 'GET':
+        # qid = id
+        # question_object = QuestionPost.objects.get(pk=qid)
+
         return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
 
     if request.method == 'POST':
-        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
+
+        mutable_data = request.data.copy()
+
+        mutable_data['question'] = mutable_data['qid']
+        user = User.objects.get(username=request.data['username'])
+        mutable_data['author'] = Profile.objects.get(user=user).id
+
+        serializer = QuestionAnswerSerializer(data=mutable_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+        return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
