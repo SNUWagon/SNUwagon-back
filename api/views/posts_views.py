@@ -42,8 +42,16 @@ def question(request, id=None):
         mutable_data = request.data.copy()
         user = User.objects.get(username=request.data['username'])
         profile = Profile.objects.get(user=user)
+
+        if int(mutable_data['bounty']) > profile.credit:
+            return generate_response(message='Not enough credits', status=status.HTTP_400_BAD_REQUEST)
+
         mutable_data['author'] = profile.id
         mutable_data['resolved'] = False
+
+        # Remove credit from user
+        profile.credit -= int(mutable_data['bounty'])
+        profile.save()
 
         serializer = QuestionPostSerializer(data=mutable_data)
         if serializer.is_valid():
