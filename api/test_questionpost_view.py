@@ -125,7 +125,7 @@ class QuestionPostTests(TestCase):
                                  content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
-    def test_create_answer(self):
+    def test_answer(self):
         client = Client()
         login(client)
 
@@ -138,7 +138,16 @@ class QuestionPostTests(TestCase):
         data['qid'] = qid
 
         path = reverse('question_answers')
-        response = client.post(path=path,
-                               data=json.dumps(data),
-                               content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+
+        # create 3 answers
+        for i in range(3):
+            response = client.post(path=path,
+                                   data=json.dumps(data),
+                                   content_type='application/json')
+            self.assertEqual(response.status_code, 201)
+
+        # test if we can retrieve answers
+        path = reverse('question_answers')
+        path = path + '/' + str(qid)
+        data = {}
+        response = client.get(path=path)

@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer, QuestionAnswerSerializer
-from api.models import QuestionPost, Profile, User, InformationPost
+from api.models import QuestionPost, Profile, User, InformationPost, QuestionAnswer
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
@@ -78,10 +78,9 @@ def question(request, id=None):
 def answer(request, id=None):
 
     if request.method == 'GET':
-        # qid = id
-        # question_object = QuestionPost.objects.get(pk=qid)
-
-        return generate_response(message='Not Implemented', status=status.HTTP_501_NOT_IMPLEMENTED)
+        answers = QuestionAnswer.objects.filter(question=id)
+        serializer = QuestionAnswerSerializer(answers, many=True)
+        return generate_response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'POST':
 
