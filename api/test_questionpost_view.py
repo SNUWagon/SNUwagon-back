@@ -90,7 +90,7 @@ class QuestionPostTests(TestCase):
             'content': 'testcontent22',
             'username': 'testuser',
             'due': '2015-03-03T04:02:32.142923Z',
-            'bounty': 300,
+            'bounty': 1300,
             'question_type': 'private'
         }
 
