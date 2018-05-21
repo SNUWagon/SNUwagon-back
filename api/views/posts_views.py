@@ -16,13 +16,12 @@ def index(request):
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=QuestionPostSerializer, responses={201: 'success'})
 @swagger_auto_schema(methods=['delete'], responses={204: 'success'})
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE', 'PATCH'])
 def question(request, id=None):
 
     # Check user login
     if not request.user.is_authenticated:
         return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
-
     if request.method == 'GET':
 
         try:
@@ -36,7 +35,7 @@ def question(request, id=None):
 
             return generate_response(mutable_data, status=status.HTTP_200_OK)
         except Exception as e:
-            return generate_response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return generate_response(message="error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     if request.method == 'POST':
         mutable_data = request.data.copy()
@@ -70,6 +69,15 @@ def question(request, id=None):
 
         results.delete()
         return generate_response(message='Question deleted', status=status.HTTP_200_OK)
+
+    if request.method == 'PATCH':
+        try:
+            qid = request.data['qid']
+            aid = request.data['aid']
+            QuestionPost.objects.filter(pk=qid).update(resolved=True, selected=aid)
+            return generate_response(message='Update successful', status=status.HTTP_200_OK)
+        except Exception as e:
+            return generate_response(message="error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionAnswerSerializer})
