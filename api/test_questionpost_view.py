@@ -26,30 +26,48 @@ def get_any_valid_id():
     return question_id
 
 
+def create_question(title, content, username='testuser', due='2019-03-03T04:02:32.142923Z',
+                    bounty=100, question_type='private'):
+    client = Client()
+    login(client)
+    data = {
+        'title': title,
+        'content': content,
+        'username': username,
+        'due': due,
+        'bounty': bounty,
+        'question_type': question_type
+    }
+    path = reverse('question_posts')
+    response = client.post(path=path,
+                           data=json.dumps(data),
+                           content_type='application/json')
+    return response
+
+
+def create_answer(qid, content, username='testuser'):
+    client = Client()
+    login(client)
+
+    data = {
+        'qid': qid,
+        'content': content,
+        'username': username,
+    }
+    path = reverse('question_answers')
+    response = client.post(path=path,
+                           data=json.dumps(data),
+                           content_type='application/json')
+    return response
+
+
 class QuestionPostTests(TestCase):
 
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
                     email='test@test.com')
-
-        # Let's create a sample QuestionPost
-        client = Client()
-        login(client)
-
-        data = {
-            'title': 'testtitle11',
-            'content': 'testcontent11',
-            'username': 'testuser',
-            'due': '2015-03-03T04:02:32.142923Z',
-            'bounty': 100,
-            'question_type': 'private'
-        }
-
-        path = reverse('question_posts')
-        client.post(path=path,
-                    data=json.dumps(data),
-                    content_type='application/json')
+        create_question(title='testtitle1', content='testcontent1')
 
     def test_get_question(self):
         client = Client()
@@ -64,41 +82,9 @@ class QuestionPostTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create_question(self):
-        client = Client()
-        login(client)
-
-        data = {
-            'title': 'testtitle22',
-            'content': 'testcontent22',
-            'username': 'testuser',
-            'due': '2015-03-03T04:02:32.142923Z',
-            'bounty': 100,
-            'question_type': 'private'
-        }
-
-        path = reverse('question_posts')
-        response = client.post(path=path,
-                               data=json.dumps(data),
-                               content_type='application/json')
-
+        response = create_question(title='testtitle2', content='testcontent2')
         self.assertEqual(response.status_code, 201)
-
-        # This is invalid request
-        # Not enough credit
-        data = {
-            'title': 'testtitle22',
-            'content': 'testcontent22',
-            'username': 'testuser',
-            'due': '2015-03-03T04:02:32.142923Z',
-            'bounty': 1300,
-            'question_type': 'private'
-        }
-
-        path = reverse('question_posts')
-        response = client.post(path=path,
-                               data=json.dumps(data),
-                               content_type='application/json')
-
+        response = create_question(title='testtitle3', content='testcontent3', bounty=1300)
         self.assertEqual(response.status_code, 400)
 
     def test_delete_question(self):
@@ -126,28 +112,14 @@ class QuestionPostTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_answer(self):
-        client = Client()
-        login(client)
-
         qid = get_any_valid_id()
-
-        data = {
-            'content': 'testcontent22',
-            'username': 'testuser',
-        }
-        data['qid'] = qid
-
-        path = reverse('question_answers')
-
-        # create 3 answers
         for i in range(3):
-            response = client.post(path=path,
-                                   data=json.dumps(data),
-                                   content_type='application/json')
+            response = create_answer(qid=qid, content='answertest')
             self.assertEqual(response.status_code, 201)
 
         # test if we can retrieve answers
+        client = Client()
+        login(client)
         path = reverse('question_answers')
         path = path + '/' + str(qid)
-        data = {}
         response = client.get(path=path)
