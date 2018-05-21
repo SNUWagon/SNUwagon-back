@@ -123,3 +123,15 @@ class QuestionPostTests(TestCase):
         path = reverse('question_answers')
         path = path + '/' + str(qid)
         response = client.get(path=path)
+
+        # test if we can select answer
+        data = {
+            'qid': qid,
+            'aid': 1,
+            'username': 'testuser'
+        }
+        path = reverse('question_posts')
+        response = client.patch(path=path,
+                                data=json.dumps(data),
+                                content_type='application/json')
+        self.assertEqual(response.status_code, 200)
