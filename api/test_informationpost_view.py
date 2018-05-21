@@ -26,6 +26,29 @@ def get_any_valid_id():
     return information_id
 
 
+def create_information(title, content, username='testuser', hidden_exist=True, hidden_content='thisishidden',
+                       due='2019-03-03T04:02:32.142923Z', hidden_content_cost=100, sponsor_credit=200):
+    client = Client()
+    login(client)
+
+    data = {
+        'title': title,
+        'content': content,
+        'username': username,
+        'hidden_exist': hidden_exist,
+        'hidden_content': hidden_content,
+        'due': due,
+        'hidden_content_cost': hidden_content_cost,
+        'sponsor_credit': sponsor_credit
+    }
+
+    path = reverse('information_posts')
+    response = client.post(path=path,
+                           data=json.dumps(data),
+                           content_type='application/json')
+    return response
+
+
 class InformationPostTests(TestCase):
 
     def setUp(self):
@@ -34,24 +57,7 @@ class InformationPostTests(TestCase):
                     email='test@test.com')
 
         # Let's create a sample InformationPost
-        client = Client()
-        login(client)
-
-        data = {
-            'title': 'testtitle11',
-            'content': 'testcontent11',
-            'username': 'testuser',
-            'hidden_exist': True,
-            'hidden_content': 'thisishidden!',
-            'due': '2015-03-03T04:02:32.142923Z',
-            'hidden_content_cost': 100,
-            'sponsor_credit': 200
-        }
-
-        path = reverse('information_posts')
-        client.post(path=path,
-                    data=json.dumps(data),
-                    content_type='application/json')
+        create_information(title='testtitle1', content='testcontent1')
 
     def test_get_information(self):
         client = Client()
@@ -66,25 +72,7 @@ class InformationPostTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create_information(self):
-        client = Client()
-        login(client)
-
-        data = {
-            'title': 'testtitle11',
-            'content': 'testcontent11',
-            'username': 'testuser',
-            'hidden_exist': True,
-            'hidden_content': 'thisishidden!',
-            'due': '2015-03-03T04:02:32.142923Z',
-            'hidden_content_cost': 100,
-            'sponsor_credit': 200
-        }
-
-        path = reverse('information_posts')
-        response = client.post(path=path,
-                               data=json.dumps(data),
-                               content_type='application/json')
-
+        response = create_information(title='testtitle2', content='testcontent2')
         self.assertEqual(response.status_code, 201)
 
     def test_delete_information(self):

@@ -33,7 +33,14 @@ def questions_with_type(request, type):
 
 @api_view(['GET'])
 def questions_with_title(request, title):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_questions = QuestionPost.objects.filter(title__icontains=title)
+    serializer = QuestionPostSerializer(every_questions, many=True)
+
+    # delete redundant field for list
+    for x in serializer.data:
+        x.pop('content', None)
+
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
@@ -62,24 +69,10 @@ def informations_with_type(request, type):
 
 @api_view(['GET'])
 def informations_with_title(request, title):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
-
-
-@api_view(['GET'])
-def all(request):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
-
-
-@api_view(['GET'])
-def all_with_tag(request, tag):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
-
-
-@api_view(['GET'])
-def all_with_type(request, type):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
-
-
-@api_view(['GET'])
-def all_with_title(request, title):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_informations = InformationPost.objects.filter(title__icontains=title)
+    serializer = InformationPostSerializer(every_informations, many=True)
+    # delete redundant field for list
+    for x in serializer.data:
+        x.pop('content', None)
+        x.pop('hidden_content', None)
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
