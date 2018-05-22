@@ -17,6 +17,7 @@ def questions(request):
     # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
 
     return generate_response(serializer.data, status=status.HTTP_200_OK)
 
@@ -39,6 +40,7 @@ def questions_with_title(request, title):
     # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
 
     return generate_response(serializer.data, status=status.HTTP_200_OK)
 
@@ -49,10 +51,10 @@ def informations(request):
     every_informations = InformationPost.objects.all()
     serializer = InformationPostSerializer(every_informations, many=True)
 
-    # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
         x.pop('hidden_content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
 
     return generate_response(serializer.data, status=status.HTTP_200_OK)
 
@@ -75,4 +77,6 @@ def informations_with_title(request, title):
     for x in serializer.data:
         x.pop('content', None)
         x.pop('hidden_content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
+
     return generate_response(serializer.data, status=status.HTTP_200_OK)

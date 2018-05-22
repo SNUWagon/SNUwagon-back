@@ -18,5 +18,7 @@ def generate_response(data=None, message='', status=drf_status.HTTP_200_OK):
 
     if data:
         response.update({'data': data})
+    else:
+        response.update({'data': []})
 
     return Response(response, status=status)
