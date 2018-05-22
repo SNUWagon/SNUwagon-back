@@ -88,7 +88,12 @@ def answer(request, id=None):
     if request.method == 'GET':
         answers = QuestionAnswer.objects.filter(question=id)
         serializer = QuestionAnswerSerializer(answers, many=True)
-        return generate_response(data=serializer.data, status=status.HTTP_200_OK)
+
+        mutable_data = serializer.data.copy()
+        for x in mutable_data:
+            x['author'] = Profile.objects.get(pk=x['author']).user.username
+
+        return generate_response(data=mutable_data, status=status.HTTP_200_OK)
 
     if request.method == 'POST':
 
