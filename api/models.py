@@ -53,7 +53,7 @@ class InformationPost(models.Model):
     author = models.ForeignKey('Profile', related_name='informations_as_writer',
                                on_delete=models.CASCADE)
     hidden_exist = models.BooleanField(default=False)
-    hidden_content = models.TextField(default='')
+    hidden_content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     due = models.DateTimeField()
     hidden_content_cost = models.IntegerField()

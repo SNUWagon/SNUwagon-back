@@ -11,10 +11,9 @@ from django.utils.timezone import datetime
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @api_view(['GET'])
 def questions(request):
-    every_questions = QuestionPost.objects.all()
+    every_questions = QuestionPost.objects.all().order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
 
-    # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
         x['author'] = Profile.objects.get(pk=x['author']).user.username
@@ -34,10 +33,9 @@ def questions_with_type(request, type):
 
 @api_view(['GET'])
 def questions_with_title(request, title):
-    every_questions = QuestionPost.objects.filter(title__icontains=title)
+    every_questions = QuestionPost.objects.filter(title__icontains=title).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
 
-    # delete redundant field for list
     for x in serializer.data:
         x.pop('content', None)
         x['author'] = Profile.objects.get(pk=x['author']).user.username
@@ -48,7 +46,7 @@ def questions_with_title(request, title):
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @api_view(['GET'])
 def informations(request):
-    every_informations = InformationPost.objects.all()
+    every_informations = InformationPost.objects.all().order_by('-created')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
@@ -71,9 +69,9 @@ def informations_with_type(request, type):
 
 @api_view(['GET'])
 def informations_with_title(request, title):
-    every_informations = InformationPost.objects.filter(title__icontains=title)
+    every_informations = InformationPost.objects.filter(title__icontains=title).order_by('-created')
     serializer = InformationPostSerializer(every_informations, many=True)
-    # delete redundant field for list
+
     for x in serializer.data:
         x.pop('content', None)
         x.pop('hidden_content', None)
