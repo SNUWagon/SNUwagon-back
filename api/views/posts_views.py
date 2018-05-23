@@ -132,7 +132,7 @@ def information(request, id=None):
             author = Profile.objects.get(pk=mutable_data['author'])
             mutable_data['author'] = author.user.username
 
-            return generate_response(serializer.data, status=status.HTTP_200_OK)
+            return generate_response(mutable_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return generate_response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
