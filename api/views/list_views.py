@@ -5,14 +5,14 @@ from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer
 from api.models import QuestionPost, Profile, User, InformationPost
-from django.utils.timezone import datetime
+from django.utils import timezone
 import operator
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @api_view(['GET'])
 def questions(request):
-    every_questions = QuestionPost.objects.all().order_by('-created')
+    every_questions = QuestionPost.objects.filter(due__gte=timezone.localtime()).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
 
     for x in serializer.data:
@@ -34,7 +34,8 @@ def questions_with_type(request, type):
 
 @api_view(['GET'])
 def questions_with_title(request, title):
-    every_questions = QuestionPost.objects.filter(title__icontains=title).order_by('-created')
+    every_questions = QuestionPost.objects.\
+        filter(title__icontains=title, due__gte=timezone.localtime()).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
 
     for x in serializer.data:
@@ -47,7 +48,7 @@ def questions_with_title(request, title):
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @api_view(['GET'])
 def informations(request):
-    every_informations = InformationPost.objects.all().order_by('-created')
+    every_informations = InformationPost.objects.filter(due__gte=timezone.localtime()).order_by('-created')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
@@ -70,7 +71,8 @@ def informations_with_type(request, type):
 
 @api_view(['GET'])
 def informations_with_title(request, title):
-    every_informations = InformationPost.objects.filter(title__icontains=title).order_by('-created')
+    every_informations = InformationPost.objects.\
+        filter(title__icontains=title, due__gte=timezone.localtime()).order_by('-created')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
