@@ -69,6 +69,7 @@ class InformationPostTests(TestCase):
 
         # Make request and check reponse
         response = client.get(path=path)
+        print(response.data)
         self.assertEqual(response.status_code, 200)
 
     def test_create_information(self):
