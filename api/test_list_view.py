@@ -27,7 +27,8 @@ def create_question(title, content, username='testuser', due='2019-03-03T04:02:3
         'username': username,
         'due': due,
         'bounty': bounty,
-        'question_type': question_type
+        'question_type': question_type,
+        'tags': ['tag1', 'tag2', 'tag3']
     }
     path = reverse('question_posts')
     response = client.post(path=path,
@@ -49,7 +50,8 @@ def create_information(title, content, username='testuser', hidden_exist=True, h
         'hidden_content': hidden_content,
         'due': due,
         'hidden_content_cost': hidden_content_cost,
-        'sponsor_credit': sponsor_credit
+        'sponsor_credit': sponsor_credit,
+        'tags': ['tag3', 'tag4', 'tag5']
     }
 
     path = reverse('information_posts')
@@ -65,7 +67,6 @@ class QuestionListTests(TestCase):
         create_user(username='testuser',
                     password='userpassword',
                     email='test@test.com')
-
         create_question(title='test title', content='test content')
 
     def test_get_list_question(self):
@@ -100,5 +101,21 @@ class InformationListTests(TestCase):
         create_information(title='te2st title', content='test content')
         client = Client()
         path = reverse('information_list_by_title', kwargs={'title': 'test'})
+        response = client.get(path=path)
+        self.assertEqual(response.status_code, 200)
+
+
+class TagListtests(TestCase):
+
+    def setUp(self):
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com')
+        create_information(title='testtitle1', content='testcontent1')
+        create_question(title='test title', content='test content')
+
+    def test_get_taglist(self):
+        client = Client()
+        path = reverse('tag_list')
         response = client.get(path=path)
         self.assertEqual(response.status_code, 200)

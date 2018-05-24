@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.utils import Error
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 
 class Profile(models.Model):
@@ -45,6 +46,7 @@ class QuestionPost(models.Model):
     question_type = models.CharField(max_length=100)
     selected = models.ForeignKey('QuestionAnswer', related_name='selected_question',
                                  on_delete=models.SET_NULL, null=True)
+    tags = ArrayField(models.CharField(max_length=64), blank=True, default=list)
 
 
 class InformationPost(models.Model):
@@ -58,6 +60,7 @@ class InformationPost(models.Model):
     due = models.DateTimeField()
     hidden_content_cost = models.IntegerField()
     sponsor_credit = models.IntegerField()
+    tags = ArrayField(models.CharField(max_length=64), blank=True, default=list)
 
 
 class QuestionAnswer(models.Model):
@@ -71,11 +74,6 @@ class QuestionAnswer(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
-    tag_type = models.CharField(max_length=100)
-    question = models.ForeignKey('QuestionPost', related_name='tags',
-                                 on_delete=models.SET_NULL, null=True)
-    information = models.ForeignKey('InformationPost', related_name='tags',
-                                    on_delete=models.SET_NULL, null=True)
 
 
 class BoughtInformation(models.Model):

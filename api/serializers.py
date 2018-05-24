@@ -40,7 +40,7 @@ class QuestionPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionPost
         fields = ('id', 'title', 'content', 'author', 'created', 'due', 'resolved',
-                  'bounty', 'question_type', 'selected')
+                  'bounty', 'question_type', 'selected', 'tags')
 
 
 class InformationPostSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class InformationPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = InformationPost
         fields = ('id', 'title', 'content', 'author', 'hidden_exist', 'hidden_content',
-                  'created', 'due', 'hidden_content_cost', 'sponsor_credit')
+                  'created', 'due', 'hidden_content_cost', 'sponsor_credit', 'tags')
 
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):

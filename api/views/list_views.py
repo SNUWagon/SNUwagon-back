@@ -6,6 +6,7 @@ from utils.response import generate_response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer
 from api.models import QuestionPost, Profile, User, InformationPost
 from django.utils.timezone import datetime
+import operator
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
@@ -78,3 +79,33 @@ def informations_with_title(request, title):
         x['author'] = Profile.objects.get(pk=x['author']).user.username
 
     return generate_response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def tags(request):
+    tag_dict = {}
+    every_informations = InformationPost.objects.all()
+    every_questions = QuestionPost.objects.all()
+
+    for info in every_informations:
+        for tag in info.tags:
+            if tag in tag_dict.keys():
+                tag_dict[tag] = tag_dict[tag] + 1
+            else:
+                tag_dict[tag] = 1
+
+    for question in every_questions:
+        for tag in question.tags:
+            if tag in tag_dict.keys():
+                tag_dict[tag] = tag_dict[tag] + 1
+            else:
+                tag_dict[tag] = 1
+
+    sortedArr = sorted(tag_dict.items(), key=operator.itemgetter(1), reverse=True)
+
+    data = []
+    for x in sortedArr:
+        data.append(x[0])
+    response_data = {'tags': data}
+
+    return generate_response(response_data, status=status.HTTP_200_OK)

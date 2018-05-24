@@ -25,6 +25,7 @@ urlpatterns = [
         name='information_list_by_type'),
     url(r'list/informations/title/(?P<title>[\s\S]+)$', list_views.informations_with_title,
         name='information_list_by_title'),
+    url(r'list/tags$', list_views.tags, name='tag_list'),
     url(r'vote$', vote_views.vote, name='vote'),
     url(r'vote/(?P<id>[0-9]+)$', vote_views.vote, name='vote_by_id'),
 ]
