@@ -24,7 +24,15 @@ def questions(request):
 
 @api_view(['GET'])
 def questions_with_tag(request, tag):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_questions = QuestionPost.objects.\
+        filter(tags__contains=[tag], due__gte=timezone.localtime()).order_by('-created')
+    serializer = QuestionPostSerializer(every_questions, many=True)
+
+    for x in serializer.data:
+        x.pop('content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
+
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -61,7 +69,16 @@ def informations(request):
 
 @api_view(['GET'])
 def informations_with_tag(request, tag):
-    return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    every_informations = InformationPost.objects.\
+        filter(tags__contains=[tag], due__gte=timezone.localtime()).order_by('-created')
+    serializer = InformationPostSerializer(every_informations, many=True)
+
+    for x in serializer.data:
+        x.pop('content', None)
+        x.pop('hidden_content', None)
+        x['author'] = Profile.objects.get(pk=x['author']).user.username
+
+    return generate_response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -72,7 +89,7 @@ def informations_with_type(request, type):
 @api_view(['GET'])
 def informations_with_title(request, title):
     every_informations = InformationPost.objects.\
-        filter(title__icontains=title, due__gte=timezone.localtime()).order_by('-created')
+        filter(title__contains=title, due__gte=timezone.localtime()).order_by('-created')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
