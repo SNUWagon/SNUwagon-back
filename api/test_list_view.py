@@ -82,6 +82,13 @@ class QuestionListTests(TestCase):
         response = client.get(path=path)
         self.assertEqual(response.status_code, 200)
 
+    def test_get_list_question_by_tag(self):
+        create_question(title='te2st title', content='test content')
+        client = Client()
+        path = reverse('question_list_by_tag', kwargs={'tag': 'tag2'})
+        response = client.get(path=path)
+        self.assertEqual(response.status_code, 200)
+
 
 class InformationListTests(TestCase):
 
@@ -101,6 +108,13 @@ class InformationListTests(TestCase):
         create_information(title='te2st title', content='test content')
         client = Client()
         path = reverse('information_list_by_title', kwargs={'title': 'test'})
+        response = client.get(path=path)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_list_information_by_tag(self):
+        create_information(title='te2st title', content='test content')
+        client = Client()
+        path = reverse('information_list_by_tag', kwargs={'tag': 'tag4'})
         response = client.get(path=path)
         self.assertEqual(response.status_code, 200)
 
