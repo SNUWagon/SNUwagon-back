@@ -1,8 +1,10 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from api.serializers import QuestionPostSerializer, InformationPostSerializer, QuestionAnswerSerializer
+from api.serializers import QuestionPostSerializer, InformationPostSerializer
+from api.serializers import QuestionAnswerSerializer, BoughtInformationSerializer
 from api.models import QuestionPost, Profile, User, InformationPost, QuestionAnswer
+from api.models import BoughtInformation
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
@@ -115,7 +117,7 @@ def answer(request, id=None):
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=InformationPostSerializer, responses={201: 'success'})
 @swagger_auto_schema(methods=['delete'], responses={204: 'success'})
-@api_view(['GET', 'POST', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE', 'PATCH'])
 def information(request, id=None):
 
     # Check user login
@@ -132,6 +134,7 @@ def information(request, id=None):
             author = Profile.objects.get(pk=mutable_data['author'])
             mutable_data['author'] = author.user.username
 
+            mutable_data['hidden_bought'] = BoughtInformation.objects.filter(user=author, post=id).count() > 0
             return generate_response(mutable_data, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -161,3 +164,24 @@ def information(request, id=None):
 
         results.delete()
         return generate_response(message='Information deleted', status=status.HTTP_200_OK)
+
+    if request.method == 'PATCH':
+        user = User.objects.get(username=request.user.username)
+        profile = Profile.objects.get(user=user)
+        information = InformationPost.objects.get(id=id)
+
+        # Not enough Credit
+        if information.hidden_content_cost > profile.credit:
+            return generate_response(message='Not enough credits', status=status.HTTP_400_BAD_REQUEST)
+
+        # Remove credit from user
+        profile.credit -= int(information.hidden_content_cost)
+        profile.save()
+
+        mutable_data = {'user': profile.id, 'post': information.id}
+
+        serializer = BoughtInformationSerializer(data=mutable_data)
+        if serializer.is_valid():
+            serializer.save()
+            return generate_response(message='Update successful', status=status.HTTP_200_OK)
+        return generate_response(message='Unexpected error (Poke KJP)', status=status.HTTP_400_BAD_REQUEST)

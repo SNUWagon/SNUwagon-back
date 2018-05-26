@@ -81,7 +81,6 @@ class BoughtInformation(models.Model):
                              on_delete=models.CASCADE)
     post = models.ForeignKey('InformationPost', related_name='buyers',
                              on_delete=models.CASCADE)
-    cost = models.IntegerField()
 
 
 class Vote(models.Model):
