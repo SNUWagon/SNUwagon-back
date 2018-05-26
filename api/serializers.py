@@ -68,12 +68,12 @@ class TagSerializer(serializers.ModelSerializer):
 class BoughtInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        models = BoughtInformation
-        fields = ('user', 'post', 'cost')
+        model = BoughtInformation
+        fields = ('user', 'post')
 
 
 class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        models = Vote
+        model = Vote
         fields = ('vote_type', 'user', 'post', 'created', 'weight')

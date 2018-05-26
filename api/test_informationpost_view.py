@@ -98,3 +98,27 @@ class InformationPostTests(TestCase):
                                  data=json.dumps(data),
                                  content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+    def test_buy(self):
+        client = Client()
+        login(client)
+
+        information_id = get_any_valid_id()
+
+        # check before buy
+        path = reverse('information_posts')
+        path = path + '/' + str(information_id)
+        response = client.get(path=path)
+        self.assertEqual(response.data['data']['hidden_bought'], False)
+
+        # buy information
+        path = reverse('information_posts')
+        path = path + '/' + str(information_id)
+        response = client.patch(path=path)
+        self.assertEqual(response.status_code, 200)
+
+        # check after buy
+        path = reverse('information_posts')
+        path = path + '/' + str(information_id)
+        response = client.get(path=path)
+        self.assertEqual(response.data['data']['hidden_bought'], True)
