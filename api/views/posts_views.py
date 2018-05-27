@@ -18,7 +18,7 @@ def index(request):
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=QuestionPostSerializer, responses={201: 'success'})
 @swagger_auto_schema(methods=['delete'], responses={204: 'success'})
-@api_view(['GET', 'POST', 'DELETE', 'PATCH'])
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def question(request, id=None):
 
     # Check user login
@@ -72,7 +72,7 @@ def question(request, id=None):
         results.delete()
         return generate_response(message='Question deleted', status=status.HTTP_200_OK)
 
-    if request.method == 'PATCH':
+    if request.method == 'PUT':
         try:
             qid = request.data['qid']
             aid = request.data['aid']
@@ -117,7 +117,7 @@ def answer(request, id=None):
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @swagger_auto_schema(methods=['post'], request_body=InformationPostSerializer, responses={201: 'success'})
 @swagger_auto_schema(methods=['delete'], responses={204: 'success'})
-@api_view(['GET', 'POST', 'DELETE', 'PATCH'])
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def information(request, id=None):
 
     # Check user login
@@ -165,7 +165,7 @@ def information(request, id=None):
         results.delete()
         return generate_response(message='Information deleted', status=status.HTTP_200_OK)
 
-    if request.method == 'PATCH':
+    if request.method == 'PUT':
         user = User.objects.get(username=request.user.username)
         profile = Profile.objects.get(user=user)
         information = InformationPost.objects.get(id=id)
