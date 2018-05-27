@@ -134,7 +134,10 @@ def information(request, id=None):
             author = Profile.objects.get(pk=mutable_data['author'])
             mutable_data['author'] = author.user.username
 
-            mutable_data['hidden_bought'] = BoughtInformation.objects.filter(user=author, post=id).count() > 0
+            request_user = User.objects.get(username=request.user.username)
+            request_profile = Profile.objects.get(user=request_user)
+            mutable_data['hidden_bought'] = \
+                BoughtInformation.objects.filter(user=request_profile, post=id).count() > 0
             return generate_response(mutable_data, status=status.HTTP_200_OK)
 
         except Exception as e:
