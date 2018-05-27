@@ -131,7 +131,7 @@ class QuestionPostTests(TestCase):
             'username': 'testuser'
         }
         path = reverse('question_posts')
-        response = client.patch(path=path,
-                                data=json.dumps(data),
-                                content_type='application/json')
+        response = client.put(path=path,
+                              data=json.dumps(data),
+                              content_type='application/json')
         self.assertEqual(response.status_code, 200)

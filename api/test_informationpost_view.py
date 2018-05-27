@@ -114,7 +114,7 @@ class InformationPostTests(TestCase):
         # buy information
         path = reverse('information_posts')
         path = path + '/' + str(information_id)
-        response = client.patch(path=path)
+        response = client.put(path=path)
         self.assertEqual(response.status_code, 200)
 
         # check after buy
