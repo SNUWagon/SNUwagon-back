@@ -203,6 +203,10 @@ def information(request, id=None):
         profile.credit -= int(information.hidden_content_cost)
         profile.save()
 
+        # Add credit to author
+        information.author.credit = information.author.credit + information.hidden_content_cost
+        information.author.save()
+
         mutable_data = {'user': profile.id, 'post': information.id}
 
         serializer = BoughtInformationSerializer(data=mutable_data)
