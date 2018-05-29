@@ -16,7 +16,10 @@ class Profile(models.Model):
 # base create_user wrapper
 def create_user(**kwargs):
     try:
-
+        if 'hashstring' not in kwargs:
+            kwargs['hashstring'] = '!'
+        if 'verified' not in kwargs:
+            kwargs['verified'] = False
         if len(User.objects.filter(email=kwargs['email'])) > 0:
             return None
 
@@ -29,33 +32,8 @@ def create_user(**kwargs):
 
         new_user = Profile.objects.create(
             user=user,
-            verified=False,
-            hashstring=md5(kwargs['username'].encode()).hexdigest(),
-        )
-
-        return new_user
-
-    except Error:
-        return None
-
-
-# this is for test
-def create_user_test(**kwargs):
-    try:
-        if len(User.objects.filter(email=kwargs['email'])) > 0:
-            return None
-
-        user = User.objects.create_user(
-            username=kwargs['username'],
-            password=kwargs['password'],
-            email=kwargs['email'],
-            is_active=True,
-        )
-
-        new_user = Profile.objects.create(
-            user=user,
-            verified=True,
-            hashstring=md5(kwargs['username'].encode()).hexdigest(),
+            verified=kwargs['verified'],
+            hashstring=kwargs['hashstring'],
         )
 
         return new_user

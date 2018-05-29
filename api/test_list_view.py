@@ -3,7 +3,6 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import authenticate
 from .models import Profile, create_user, QuestionPost, InformationPost, User
-from .models import create_user_test
 
 
 def login(client):
@@ -65,9 +64,10 @@ def create_information(title, content, username='testuser', hidden_exist=True, h
 class QuestionListTests(TestCase):
 
     def setUp(self):
-        create_user_test(username='testuser',
-                         password='userpassword',
-                         email='test@test.com')
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com',
+                    verified=True)
         create_question(title='test title', content='test content')
 
     def test_get_list_question(self):
@@ -94,9 +94,10 @@ class QuestionListTests(TestCase):
 class InformationListTests(TestCase):
 
     def setUp(self):
-        create_user_test(username='testuser',
-                         password='userpassword',
-                         email='test@test.com')
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com',
+                    verified=True)
         create_information(title='testtitle1', content='testcontent1')
 
     def test_get_information(self):
@@ -123,9 +124,10 @@ class InformationListTests(TestCase):
 class TagListtests(TestCase):
 
     def setUp(self):
-        create_user_test(username='testuser',
-                         password='userpassword',
-                         email='test@test.com')
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com',
+                    verified=True)
         create_information(title='testtitle1', content='testcontent1')
         create_question(title='test title', content='test content')
 
