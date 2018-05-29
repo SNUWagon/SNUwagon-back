@@ -74,6 +74,8 @@ class InformationPostTests(TestCase):
     def test_create_information(self):
         response = create_information(title='testtitle2', content='testcontent2')
         self.assertEqual(response.status_code, 201)
+        response = create_information(title='testtitle2', content='testcontent2', sponsor_credit=50000)
+        self.assertEqual(response.status_code, 400)
 
     def test_delete_information(self):
         client = Client()
