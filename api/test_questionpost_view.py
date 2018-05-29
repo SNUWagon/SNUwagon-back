@@ -66,7 +66,8 @@ class QuestionPostTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
         create_question(title='testtitle1', content='testcontent1')
 
     def test_get_question(self):

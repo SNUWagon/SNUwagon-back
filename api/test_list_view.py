@@ -66,7 +66,8 @@ class QuestionListTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
         create_question(title='test title', content='test content')
 
     def test_get_list_question(self):
@@ -95,7 +96,8 @@ class InformationListTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
         create_information(title='testtitle1', content='testcontent1')
 
     def test_get_information(self):
@@ -124,7 +126,8 @@ class TagListtests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
         create_information(title='testtitle1', content='testcontent1')
         create_question(title='test title', content='test content')
 

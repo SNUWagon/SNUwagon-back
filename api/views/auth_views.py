@@ -8,6 +8,10 @@ from api.models import Profile, create_user
 from api.serializers import UserSerializer, UserProfileSerializer
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
+from django.core.mail import EmailMessage
+from hashlib import md5
+import string
+import random
 
 
 @swagger_auto_schema(methods=['post'], request_body=UserSerializer, responses={201: 'success'})
@@ -17,6 +21,10 @@ def signin(request):
     if request.method == 'POST':
         username = request.data.get('username', None)
         password = request.data.get('password', None)
+
+        profile = Profile.objects.get(user=User.objects.get(username=username))
+        if profile.verified is False:
+            return generate_response(message='Please verify email first', status=status.HTTP_401_UNAUTHORIZED)
 
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -38,11 +46,35 @@ def signup(request):
         if not (username and password and email):
             return generate_response(message='Parameters are not given', status=status.HTTP_401_UNAUTHORIZED)
 
-        success = create_user(username=username, password=password, email=email)
+        ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        salted_username = username
+        for i in range(5):
+            salted_username = salted_username + random.choice(ALPHABET)
+        hashstring = md5(salted_username.encode()).hexdigest()
+
+        success = create_user(username=username, password=password, email=email, hashstring=hashstring)
         if not success:
             return generate_response(message='Duplicate username or email', status=status.HTTP_401_UNAUTHORIZED)
 
-        return generate_response(status=status.HTTP_201_CREATED)
+        mail_subject = '[SNUWagon] Please confirm your email'
+        message = 'http://localhost:8000/api/auth/verification/' + hashstring
+        to = [email]
+        email = EmailMessage(
+            mail_subject, message, to=to
+        )
+        email.send()
+
+        return generate_response(message='Please authenticate email', status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def verification(request, hashstring):
+
+    profile = Profile.objects.get(hashstring=hashstring)
+    profile.verified = True
+    profile.save()
+
+    return generate_response(message='Authentication successful', status=status.HTTP_201_CREATED)
 
 
 @swagger_auto_schema(methods=['get'], responses={200: 'success'})

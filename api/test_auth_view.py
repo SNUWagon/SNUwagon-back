@@ -11,7 +11,8 @@ class ApiSignInTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
 
     def test_sign_in_success(self):
         client = Client()
@@ -49,7 +50,8 @@ class ApiSignUpTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
 
     def test_sign_up_success(self):
         client = Client()
@@ -104,7 +106,8 @@ class ApiSignOutTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
 
     def test_logout(self):
         client = Client()
@@ -120,7 +123,8 @@ class ApiUserInfoTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
 
     def test_get_userinfo_success(self):
         client = Client()

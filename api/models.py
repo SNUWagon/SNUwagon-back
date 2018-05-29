@@ -2,18 +2,24 @@ from django.db import models
 from django.db.utils import Error
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from hashlib import md5
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     credit = models.IntegerField(default=1000)
     created = models.DateTimeField(auto_created=True, auto_now=True)
+    verified = models.BooleanField(default=False)
+    hashstring = models.CharField(max_length=200, default='')
 
 
 # base create_user wrapper
 def create_user(**kwargs):
     try:
-
+        if 'hashstring' not in kwargs:
+            kwargs['hashstring'] = '!'
+        if 'verified' not in kwargs:
+            kwargs['verified'] = False
         if len(User.objects.filter(email=kwargs['email'])) > 0:
             return None
 
@@ -26,6 +32,8 @@ def create_user(**kwargs):
 
         new_user = Profile.objects.create(
             user=user,
+            verified=kwargs['verified'],
+            hashstring=kwargs['hashstring'],
         )
 
         return new_user

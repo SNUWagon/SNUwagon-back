@@ -54,7 +54,8 @@ class InformationPostTests(TestCase):
     def setUp(self):
         create_user(username='testuser',
                     password='userpassword',
-                    email='test@test.com')
+                    email='test@test.com',
+                    verified=True)
 
         # Let's create a sample InformationPost
         create_information(title='testtitle1', content='testcontent1')
