@@ -46,7 +46,10 @@ def signup(request):
         if not (username and password and email):
             return generate_response(message='Parameters are not given', status=status.HTTP_401_UNAUTHORIZED)
 
-        salted_username = username + ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        salted_username = username
+        for i in range(5):
+            salted_username = salted_username + random.choice(ALPHABET)
         hashstring = md5(salted_username.encode()).hexdigest()
 
         success = create_user(username=username, password=password, email=email, hashstring=hashstring)
