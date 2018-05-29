@@ -3,6 +3,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import authenticate
 from .models import Profile, create_user, QuestionPost, InformationPost, User
+from .models import create_user_test
 
 
 def login(client):
@@ -52,9 +53,9 @@ def create_information(title, content, username='testuser', hidden_exist=True, h
 class InformationPostTests(TestCase):
 
     def setUp(self):
-        create_user(username='testuser',
-                    password='userpassword',
-                    email='test@test.com')
+        create_user_test(username='testuser',
+                         password='userpassword',
+                         email='test@test.com')
 
         # Let's create a sample InformationPost
         create_information(title='testtitle1', content='testcontent1')

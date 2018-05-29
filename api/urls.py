@@ -1,11 +1,13 @@
 from django.urls import path
 from django.conf.urls import url, include
-from api.views import auth_views, list_views, posts_views, vote_views
+from api.views import auth_views, list_views, posts_views, vote_views, debug_views
 
 urlpatterns = [
+    url(r'^debug/sendmail$', debug_views.sendmail, name='send_mail'),
     url(r'^auth/signin$', auth_views.signin, name='sign_in'),
     url(r'^auth/signup$', auth_views.signup, name='sign_up'),
     url(r'^auth/signout$', auth_views.signout, name='sign_out'),
+    url(r'^auth/verification/(?P<hashstring>[\s\S]+)$', auth_views.verification, name='verification'),
     url(r'^auth/userinfo$', auth_views.userinfo, name='my_info'),
     url(r'^auth/userinfo/(?P<id>[0-9]+)$', auth_views.userinfo, name='user_info'),
     url(r'posts/index$', posts_views.index, name='index_posts'),

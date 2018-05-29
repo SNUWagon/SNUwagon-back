@@ -3,15 +3,16 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import authenticate
 from .models import Profile, create_user, QuestionPost, InformationPost, User
+from .models import create_user_test
 
 
 class ApiSignInTests(TestCase):
 
     # put default settings in here
     def setUp(self):
-        create_user(username='testuser',
-                    password='userpassword',
-                    email='test@test.com')
+        create_user_test(username='testuser',
+                         password='userpassword',
+                         email='test@test.com')
 
     def test_sign_in_success(self):
         client = Client()
@@ -47,9 +48,9 @@ class ApiSignInTests(TestCase):
 class ApiSignUpTests(TestCase):
 
     def setUp(self):
-        create_user(username='testuser',
-                    password='userpassword',
-                    email='test@test.com')
+        create_user_test(username='testuser',
+                         password='userpassword',
+                         email='test@test.com')
 
     def test_sign_up_success(self):
         client = Client()
@@ -102,9 +103,9 @@ class ApiSignUpTests(TestCase):
 class ApiSignOutTests(TestCase):
 
     def setUp(self):
-        create_user(username='testuser',
-                    password='userpassword',
-                    email='test@test.com')
+        create_user_test(username='testuser',
+                         password='userpassword',
+                         email='test@test.com')
 
     def test_logout(self):
         client = Client()
@@ -118,9 +119,9 @@ class ApiSignOutTests(TestCase):
 class ApiUserInfoTests(TestCase):
 
     def setUp(self):
-        create_user(username='testuser',
-                    password='userpassword',
-                    email='test@test.com')
+        create_user_test(username='testuser',
+                         password='userpassword',
+                         email='test@test.com')
 
     def test_get_userinfo_success(self):
         client = Client()
