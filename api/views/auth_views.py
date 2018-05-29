@@ -10,6 +10,8 @@ from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
 from django.core.mail import EmailMessage
 from hashlib import md5
+import string
+import random
 
 
 @swagger_auto_schema(methods=['post'], request_body=UserSerializer, responses={201: 'success'})
@@ -44,7 +46,9 @@ def signup(request):
         if not (username and password and email):
             return generate_response(message='Parameters are not given', status=status.HTTP_401_UNAUTHORIZED)
 
-        hashstring = md5(username.encode()).hexdigest()
+        salted_username = username + ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        hashstring = md5(salted_username.encode()).hexdigest()
+
         success = create_user(username=username, password=password, email=email, hashstring=hashstring)
         if not success:
             return generate_response(message='Duplicate username or email', status=status.HTTP_401_UNAUTHORIZED)
