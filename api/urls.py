@@ -1,9 +1,8 @@
 from django.urls import path
 from django.conf.urls import url, include
-from api.views import auth_views, list_views, posts_views, vote_views, debug_views
+from api.views import auth_views, list_views, posts_views, vote_views
 
 urlpatterns = [
-    url(r'^debug/sendmail$', debug_views.sendmail, name='send_mail'),
     url(r'^auth/signin$', auth_views.signin, name='sign_in'),
     url(r'^auth/signup$', auth_views.signup, name='sign_up'),
     url(r'^auth/signout$', auth_views.signout, name='sign_out'),

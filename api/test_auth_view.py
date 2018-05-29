@@ -10,6 +10,9 @@ class ApiSignInTests(TestCase):
 
     # put default settings in here
     def setUp(self):
+        create_user(username='testuser2',
+                    password='userpassword2',
+                    email='test2@test.com')
         create_user_test(username='testuser',
                          password='userpassword',
                          email='test@test.com')
