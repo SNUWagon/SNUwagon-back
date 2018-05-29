@@ -150,6 +150,13 @@ def information(request, id=None):
         profile = Profile.objects.get(user=user)
         mutable_data['author'] = profile.id
 
+        if int(mutable_data['sponsor_credit']) > profile.credit:
+            return generate_response(message='Not enough credits', status=status.HTTP_400_BAD_REQUEST)
+
+        # Remove credit from user
+        profile.credit -= int(mutable_data['sponsor_credit'])
+        profile.save()
+
         serializer = InformationPostSerializer(data=mutable_data)
 
         if serializer.is_valid():
