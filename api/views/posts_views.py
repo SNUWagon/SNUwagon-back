@@ -76,9 +76,24 @@ def question(request, id=None):
         try:
             qid = request.data['qid']
             aid = request.data['aid']
-            QuestionPost.objects.filter(pk=qid).update(resolved=True, selected=aid)
+            question = QuestionPost.objects.get(pk=qid)
+            answer = QuestionAnswer.objects.get(pk=aid)
+
+            (question.resolved, question.selected) = (True, answer)
+            question.save()
+
+            cost = question.bounty
+
+            question_writer = Profile.objects.get(pk=question.author.id)
+            answer_writer = Profile.objects.get(pk=answer.author.id)
+
+            question_writer.credit = question_writer.credit + (cost // 10)
+            question_writer.save()
+            answer_writer.credit = answer_writer.credit + cost
+            answer_writer.save()
             return generate_response(message='Update successful', status=status.HTTP_200_OK)
         except Exception as e:
+            print(e)
             return generate_response(message="error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
