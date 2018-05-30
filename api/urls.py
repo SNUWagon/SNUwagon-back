@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf.urls import url, include
 from api.views import auth_views, list_views, question_views, information_views, vote_views
+from api.views import notification_views
 
 urlpatterns = [
     url(r'^auth/signin$', auth_views.signin, name='sign_in'),
@@ -28,6 +29,9 @@ urlpatterns = [
     url(r'list/informations/title/(?P<title>[\s\S]+)$', list_views.informations_with_title,
         name='information_list_by_title'),
     url(r'list/tags$', list_views.tags, name='tag_list'),
+
+    url(r'notifications/$', notification_views.notification, name='notifications'),
+
     url(r'vote$', vote_views.vote, name='vote'),
     url(r'vote/(?P<id>[0-9]+)$', vote_views.vote, name='vote_by_id'),
 ]

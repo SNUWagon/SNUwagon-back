@@ -65,8 +65,7 @@ class InformationPostTests(TestCase):
         login(client)
 
         information_id = get_any_valid_id()
-        path = reverse('information_posts')
-        path = path + '/' + str(information_id)
+        path = reverse('information_post_by_id', kwargs={'id': information_id})
 
         # Make request and check reponse
         response = client.get(path=path)
@@ -85,8 +84,7 @@ class InformationPostTests(TestCase):
         data = {}
 
         # Check for invalid delete
-        path = reverse('information_posts')
-        path = path + '/' + str(100)
+        path = reverse('information_post_by_id', kwargs={'id': 3200})
         response = client.delete(path=path,
                                  data=json.dumps(data),
                                  content_type='application/json')
@@ -94,8 +92,7 @@ class InformationPostTests(TestCase):
 
         information_id = get_any_valid_id()
         # Check for valid delete
-        path = reverse('information_posts')
-        path = path + '/' + str(information_id)
+        path = reverse('information_post_by_id', kwargs={'id': information_id})
 
         response = client.delete(path=path,
                                  data=json.dumps(data),
@@ -109,19 +106,16 @@ class InformationPostTests(TestCase):
         information_id = get_any_valid_id()
 
         # check before buy
-        path = reverse('information_posts')
-        path = path + '/' + str(information_id)
+        path = reverse('information_post_by_id', kwargs={'id': information_id})
         response = client.get(path=path)
         self.assertEqual(response.data['data']['hidden_bought'], False)
 
         # buy information
-        path = reverse('information_posts')
-        path = path + '/' + str(information_id)
+        path = reverse('information_post_by_id', kwargs={'id': information_id})
         response = client.put(path=path)
         self.assertEqual(response.status_code, 200)
 
         # check after buy
-        path = reverse('information_posts')
-        path = path + '/' + str(information_id)
+        path = reverse('information_post_by_id', kwargs={'id': information_id})
         response = client.get(path=path)
         self.assertEqual(response.data['data']['hidden_bought'], True)

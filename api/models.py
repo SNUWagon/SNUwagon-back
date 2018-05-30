@@ -85,17 +85,27 @@ class Tag(models.Model):
 
 
 class BoughtInformation(models.Model):
-    user = models.ForeignKey('Profile', related_name='bought_informations',
-                             on_delete=models.CASCADE)
+    profile = models.ForeignKey('Profile', related_name='bought_informations',
+                                on_delete=models.CASCADE)
     post = models.ForeignKey('InformationPost', related_name='buyers',
                              on_delete=models.CASCADE)
 
 
 class Vote(models.Model):
     vote_type = models.CharField(max_length=100)
-    user = models.ForeignKey('Profile', related_name='votes',
-                             on_delete=models.CASCADE)
+    profile = models.ForeignKey('Profile', related_name='votes',
+                                on_delete=models.CASCADE)
     post = models.ForeignKey('InformationPost', related_name='votes',
                              on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     weight = models.IntegerField()
+
+
+class Notification(models.Model):
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    notification_type = models.CharField(max_length=200)
+    content_id = models.IntegerField()
+    message = models.CharField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True)
+    pushed = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
