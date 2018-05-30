@@ -118,3 +118,26 @@ class NotificationTests(TestCase):
         path = reverse('notifications')
         response = client.get(path=path)
         self.assertEqual(response.status_code, 200)
+
+    def test_get_newsfeed(self):
+        client = Client()
+        login(client)
+        path = reverse('newsfeed')
+        response = client.get(path=path)
+        self.assertEqual(response.status_code, 200)
+
+    def test_read_newsfeed(self):
+        client = Client()
+        login(client)
+
+        every_notification = Notification.objects.filter(read=False)
+        nid = 0
+        for notification in every_notification:
+            nid = notification.id
+
+        path = reverse('newsfeed')
+        data = {'nid': nid}
+        response = client.put(path=path,
+                              data=json.dumps(data),
+                              content_type='application/json')
+        self.assertEqual(response.status_code, 200)

@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from api.models import Profile, create_user
 from api.serializers import UserSerializer, UserProfileSerializer
 from utils.response import generate_response
+from django.test.utils import override_settings
+from django.conf import settings
 
 
 @api_view(['GET'])
@@ -16,7 +18,8 @@ def verify(request, username):
         user = User.objects.get(username=username)
         profile = Profile.objects.get(user=user)
         profile.verified = True
-        profile.save()
+        if settings.DEBUG:
+            profile.save()
         return generate_response(status=status.HTTP_200_OK)
 
 
@@ -27,5 +30,6 @@ def credit(request, username):
         user = User.objects.get(username=username)
         profile = Profile.objects.get(user=user)
         profile.credit = profile.credit + 1000
-        profile.save()
+        if settings.DEBUG:
+            profile.save()
         return generate_response(status=status.HTTP_200_OK)
