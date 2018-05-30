@@ -23,11 +23,12 @@ def generate_notification(profile_id, notification_type, content_id, message):
 
 
 @api_view(['GET'])
-def notification(request, id=None):
+def notification(request):
 
     # Check user login
     if not request.user.is_authenticated:
         return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'GET':
 
         user = User.objects.get(username=request.user.username)
@@ -41,3 +42,33 @@ def notification(request, id=None):
         every_notifications.update(pushed=True)
 
         return response
+
+
+@api_view(['GET', 'PUT'])
+def newsfeed(request):
+
+    # Check user login
+    if not request.user.is_authenticated:
+        return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+
+        user = User.objects.get(username=request.user.username)
+        profile = Profile.objects.get(user=user)
+
+        every_notifications = Notification.objects.filter(profile=profile, read=False)
+        serializer = NotificationSerializer(every_notifications, many=True)
+
+        response = generate_response(serializer.data, status=status.HTTP_200_OK)
+
+        every_notifications.update(pushed=True)
+
+        return response
+
+    if request.method == 'PUT':
+        nid = request.data['nid']
+        notification = Notification.objects.get(id=nid)
+        notification.read = True
+        notification.save()
+
+        return generate_response(status=status.HTTP_200_OK)
