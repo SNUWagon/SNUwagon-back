@@ -117,5 +117,4 @@ class NotificationTests(TestCase):
 
         path = reverse('notifications')
         response = client.get(path=path)
-        print(response.data)
         self.assertEqual(response.status_code, 200)
