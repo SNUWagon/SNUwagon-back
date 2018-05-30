@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf.urls import url, include
 from api.views import auth_views, list_views, question_views, information_views, vote_views
-from api.views import notification_views
+from api.views import notification_views, debug_views
 
 urlpatterns = [
     url(r'^auth/signin$', auth_views.signin, name='sign_in'),
@@ -34,4 +34,7 @@ urlpatterns = [
 
     url(r'vote$', vote_views.vote, name='vote'),
     url(r'vote/(?P<id>[0-9]+)$', vote_views.vote, name='vote_by_id'),
+
+    url(r'debug/verify/(?P<username>[\s\S]+)$', debug_views.verify, name='debug_verify'),
+    url(r'debug/credit/(?P<username>[\s\S]+)$', debug_views.credit, name='debug_credit'),
 ]
