@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf.urls import url, include
-from api.views import auth_views, list_views, posts_views, vote_views
+from api.views import auth_views, list_views, question_views, information_views, vote_views
 
 urlpatterns = [
     url(r'^auth/signin$', auth_views.signin, name='sign_in'),
@@ -9,13 +9,14 @@ urlpatterns = [
     url(r'^auth/verification/(?P<hashstring>[\s\S]+)$', auth_views.verification, name='verification'),
     url(r'^auth/userinfo$', auth_views.userinfo, name='my_info'),
     url(r'^auth/userinfo/(?P<id>[0-9]+)$', auth_views.userinfo, name='user_info'),
-    url(r'posts/index$', posts_views.index, name='index_posts'),
-    url(r'posts/question$', posts_views.question, name='question_posts'),
-    url(r'posts/question/(?P<id>[0-9]+)$', posts_views.question, name='question_post_by_id'),
-    url(r'posts/answer$', posts_views.answer, name='question_answers'),
-    url(r'posts/answer/(?P<id>[0-9]+)$', posts_views.answer, name='question_answers_by_id'),
-    url(r'posts/information$', posts_views.information, name='information_posts'),
-    url(r'posts/information/(?P<id>[0-9]+)$', posts_views.information, name='information_post_by_id'),
+
+    url(r'posts/question$', question_views.question, name='question_posts'),
+    url(r'posts/question/(?P<id>[0-9]+)$', question_views.question, name='question_post_by_id'),
+    url(r'posts/answer$', question_views.answer, name='question_answers'),
+    url(r'posts/answer/(?P<id>[0-9]+)$', question_views.answer, name='question_answers_by_id'),
+    url(r'posts/information$', information_views.information, name='information_posts'),
+    url(r'posts/information/(?P<id>[0-9]+)$', information_views.information, name='information_post_by_id'),
+
     url(r'list/questions$', list_views.questions, name='question_list'),
     url(r'list/questions/tag/(?P<tag>[\s\S]+)$', list_views.questions_with_tag, name='question_list_by_tag'),
     url(r'list/questions/type/(?P<type>[0-9]+)$', list_views.questions_with_type, name='question_list_by_type'),
