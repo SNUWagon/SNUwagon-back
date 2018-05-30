@@ -1,11 +1,12 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from api.serializers import QuestionPostSerializer, QuestionAnswerSerializer
-from api.models import QuestionPost, Profile, User, QuestionAnswer
+from api.serializers import QuestionPostSerializer, QuestionAnswerSerializer, NotificationSerializer
+from api.models import QuestionPost, Profile, User, QuestionAnswer, Notification
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
+from api.views.notification_views import generate_notification
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
@@ -17,6 +18,7 @@ def question(request, id=None):
     # Check user login
     if not request.user.is_authenticated:
         return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
     if request.method == 'GET':
 
         try:
@@ -72,9 +74,11 @@ def question(request, id=None):
             question = QuestionPost.objects.get(pk=qid)
             answer = QuestionAnswer.objects.get(pk=aid)
 
+            # update resolved
             (question.resolved, question.selected) = (True, answer)
             question.save()
 
+            # update each user's credit
             cost = question.bounty
 
             question_writer = Profile.objects.get(pk=question.author.id)
@@ -84,6 +88,13 @@ def question(request, id=None):
             question_writer.save()
             answer_writer.credit = answer_writer.credit + cost
             answer_writer.save()
+
+            # add new notification to author
+            question = QuestionPost.objects.get(pk=qid)
+            message_string = 'Your answer to ' + question.title + ' is selected!'
+            generate_notification(profile_id=answer.author.id, notification_type='answer_selected',
+                                  content_id=qid, message=message_string)
+
             return generate_response(message='Update successful', status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -115,8 +126,15 @@ def answer(request, id=None):
 
         serializer = QuestionAnswerSerializer(data=mutable_data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
+        if not serializer.is_valid():
+            return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
-        return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+
+        # add new notification to author
+        question = QuestionPost.objects.get(pk=mutable_data['qid'])
+        message_string = 'You have new answer to question : ' + question.title
+        generate_notification(profile_id=question.author.id, notification_type='new_answer',
+                              content_id=mutable_data['qid'], message=message_string)
+
+        return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)

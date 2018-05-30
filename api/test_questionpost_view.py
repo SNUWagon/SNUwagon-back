@@ -75,8 +75,7 @@ class QuestionPostTests(TestCase):
         login(client)
 
         question_id = get_any_valid_id()
-        path = reverse('question_posts')
-        path = path + '/' + str(question_id)
+        path = reverse('question_post_by_id', kwargs={'id': question_id})
 
         # Make request and check reponse
         response = client.get(path=path)
@@ -95,8 +94,7 @@ class QuestionPostTests(TestCase):
         data = {}
 
         # Check for invalid delete
-        path = reverse('question_posts')
-        path = path + '/' + str(100)
+        path = reverse('question_post_by_id', kwargs={'id': 2100})
         response = client.delete(path=path,
                                  data=json.dumps(data),
                                  content_type='application/json')
@@ -104,8 +102,7 @@ class QuestionPostTests(TestCase):
 
         # Check for valid delete
         question_id = get_any_valid_id()
-        path = reverse('question_posts')
-        path = path + '/' + str(question_id)
+        path = reverse('question_post_by_id', kwargs={'id': question_id})
 
         response = client.delete(path=path,
                                  data=json.dumps(data),
@@ -121,15 +118,12 @@ class QuestionPostTests(TestCase):
         # test if we can retrieve answers
         client = Client()
         login(client)
-        path = reverse('question_answers')
-        path = path + '/' + str(qid)
+        path = reverse('question_answers_by_id', kwargs={'id': qid})
         response = client.get(path=path)
-
         # test if we can select answer
         data = {
             'qid': qid,
-            'aid': 1,
-            'username': 'testuser'
+            'aid': response.data['data'][1]['id'],
         }
         path = reverse('question_posts')
         response = client.put(path=path,

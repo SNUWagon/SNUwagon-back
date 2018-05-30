@@ -6,6 +6,7 @@ from api.models import Profile, User, InformationPost, BoughtInformation
 from django.db.utils import Error
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
+from api.views.notification_views import generate_notification
 
 
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
@@ -31,7 +32,7 @@ def information(request, id=None):
             request_user = User.objects.get(username=request.user.username)
             request_profile = Profile.objects.get(user=request_user)
             mutable_data['hidden_bought'] = \
-                BoughtInformation.objects.filter(user=request_profile, post=id).count() > 0
+                BoughtInformation.objects.filter(profile=request_profile, post=id).count() > 0
             return generate_response(mutable_data, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -86,10 +87,18 @@ def information(request, id=None):
         information.author.credit = information.author.credit + information.hidden_content_cost
         information.author.save()
 
-        mutable_data = {'user': profile.id, 'post': information.id}
+        mutable_data = {'profile': profile.id, 'post': information.id}
 
         serializer = BoughtInformationSerializer(data=mutable_data)
-        if serializer.is_valid():
-            serializer.save()
-            return generate_response(message='Update successful', status=status.HTTP_200_OK)
-        return generate_response(message='Unexpected error (Poke KJP)', status=status.HTTP_400_BAD_REQUEST)
+
+        if not serializer.is_valid():
+            return generate_response(message='Unexpected error (Poke KJP)', status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        # generate notification
+        message_string = 'Your information ' + information.title + ' is bought!'
+        generate_notification(profile_id=information.author.id, notification_type='information_bought',
+                              content_id=information.id, message=message_string)
+
+        return generate_response(message='Update successful', status=status.HTTP_200_OK)

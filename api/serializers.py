@@ -1,5 +1,5 @@
 from .models import Profile, QuestionPost, InformationPost, QuestionAnswer
-from .models import Tag, BoughtInformation, Vote
+from .models import Tag, BoughtInformation, Vote, Notification
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -69,11 +69,19 @@ class BoughtInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoughtInformation
-        fields = ('user', 'post')
+        fields = ('profile', 'post')
 
 
 class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vote
-        fields = ('vote_type', 'user', 'post', 'created', 'weight')
+        fields = ('vote_type', 'profile', 'post', 'created', 'weight')
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Notification
+        fields = ('id', 'profile', 'notification_type', 'content_id', 'message', 'created',
+                  'pushed', 'read')
