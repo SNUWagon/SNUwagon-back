@@ -27,7 +27,10 @@ DEBUG = os.environ.get('DEBUG') or True
 NO_AUTH = os.environ.get('NO_AUTH') or False
 
 ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS.append('*')
+else:
+    ALLOWED_HOSTS.append('ec2-13-125-217-154.ap-northeast-2.compute.amazonaws.com')
 
 # Application definition
 
