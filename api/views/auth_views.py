@@ -22,6 +22,9 @@ def signin(request):
         username = request.data.get('username', None)
         password = request.data.get('password', None)
 
+        if User.objects.filter(username=username).count() == 0:
+            return generate_response(message='Username or password is wrong', status=status.HTTP_401_UNAUTHORIZED)
+
         profile = Profile.objects.get(user=User.objects.get(username=username))
         if profile.verified is False:
             return generate_response(message='Please verify email first', status=status.HTTP_401_UNAUTHORIZED)
