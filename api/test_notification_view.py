@@ -31,7 +31,8 @@ def create_information(title, content, username='testuser', hidden_exist=True, h
         'hidden_content': hidden_content,
         'due': due,
         'hidden_content_cost': hidden_content_cost,
-        'sponsor_credit': sponsor_credit
+        'sponsor_credit': sponsor_credit,
+        'tags': ['tag4', 'tag6', 'tag3']
     }
 
     path = reverse('information_posts')
@@ -51,7 +52,8 @@ def create_question(title, content, username='testuser', due='2019-03-03T04:02:3
         'username': username,
         'due': due,
         'bounty': bounty,
-        'question_type': question_type
+        'question_type': question_type,
+        'tags': ['tag1', 'tag2', 'tag3']
     }
     path = reverse('question_posts')
     response = client.post(path=path,
@@ -140,4 +142,36 @@ class NotificationTests(TestCase):
         response = client.put(path=path,
                               data=json.dumps(data),
                               content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+
+class WatchTagTests(TestCase):
+
+    def setUp(self):
+        create_user(username='testuser',
+                    password='userpassword',
+                    email='test@test.com',
+                    verified=True)
+
+    def test_watch_tags(self):
+        client = Client()
+        login(client)
+
+        # setup watch tags
+        data = {
+            'tags': ['tag1', 'tag2', 'tag3']
+        }
+        path = reverse('watch_tags')
+        response = client.post(path=path,
+                               data=json.dumps(data),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        # make question and information
+        create_information(title='testinformation1', content='testcontent1')
+        create_question(title='testquestion1', content='testcontent1')
+
+        # check created notifications
+        path = reverse('notifications')
+        response = client.get(path=path)
         self.assertEqual(response.status_code, 200)
