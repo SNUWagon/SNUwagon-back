@@ -11,6 +11,7 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_created=True, auto_now=True)
     verified = models.BooleanField(default=False)
     hashstring = models.CharField(max_length=200, default='')
+    watch_tags = ArrayField(models.CharField(max_length=64), blank=True, default=list)
 
 
 # base create_user wrapper
