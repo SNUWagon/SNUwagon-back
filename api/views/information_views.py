@@ -70,7 +70,7 @@ def information(request, id=None):
 
         for profile in notification_dict.keys():
             message_string = 'There is new information about #' + notification_dict[profile]
-            generate_notification(profile_id=profile.id, notification_type='new information about tag',
+            generate_notification(profile_id=profile.id, notification_type='new_information_about_tag',
                                   content_id=serializer.data['id'], message=message_string)
 
         return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)

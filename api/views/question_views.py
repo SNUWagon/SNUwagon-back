@@ -67,7 +67,7 @@ def question(request, id=None):
 
         for profile in notification_dict.keys():
             message_string = 'There is new question about #' + notification_dict[profile]
-            generate_notification(profile_id=profile.id, notification_type='new question about tag',
+            generate_notification(profile_id=profile.id, notification_type='new_question_about_tag',
                                   content_id=serializer.data['id'], message=message_string)
 
         return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
