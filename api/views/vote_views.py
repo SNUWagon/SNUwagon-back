@@ -36,6 +36,7 @@ def vote(request, id=None):
         if not serializer.is_valid():
             return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
 
+        serializer.save()
         return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     return Response({'message': 'NOT IMPLEMENTED'}, status=status.HTTP_501_NOT_IMPLEMENTED)
