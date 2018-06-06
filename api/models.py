@@ -94,8 +94,8 @@ class BoughtInformation(models.Model):
 
 class Vote(models.Model):
     vote_type = models.CharField(max_length=100)
-    profile = models.ForeignKey('Profile', related_name='votes',
-                                on_delete=models.CASCADE)
+    voter = models.ForeignKey('Profile', related_name='votes',
+                              on_delete=models.CASCADE)
     post = models.ForeignKey('InformationPost', related_name='votes',
                              on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
