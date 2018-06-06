@@ -76,7 +76,7 @@ class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vote
-        fields = ('vote_type', 'profile', 'post', 'created', 'weight')
+        fields = ('vote_type', 'post', 'created', 'voter', 'weight')
 
 
 class NotificationSerializer(serializers.ModelSerializer):
