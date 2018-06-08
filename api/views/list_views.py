@@ -56,7 +56,9 @@ def questions_with_title(request, title):
 @swagger_auto_schema(methods=['get'], responses={200: InformationPostSerializer})
 @api_view(['GET'])
 def informations(request):
-    every_informations = InformationPost.objects.filter(due__gte=timezone.localtime()).order_by('-created')
+    every_informations = InformationPost.objects.\
+        filter(due__gte=timezone.localtime()).\
+        order_by('-created', 'sponsor_credit')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
@@ -70,7 +72,8 @@ def informations(request):
 @api_view(['GET'])
 def informations_with_tag(request, tag):
     every_informations = InformationPost.objects.\
-        filter(tags__contains=[tag], due__gte=timezone.localtime()).order_by('-created')
+        filter(tags__contains=[tag], due__gte=timezone.localtime()).\
+        order_by('-created', 'sponsor_credit')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
@@ -89,7 +92,8 @@ def informations_with_type(request, type):
 @api_view(['GET'])
 def informations_with_title(request, title):
     every_informations = InformationPost.objects.\
-        filter(title__contains=title, due__gte=timezone.localtime()).order_by('-created')
+        filter(title__contains=title, due__gte=timezone.localtime()).\
+        order_by('-created', 'sponsor_credit')
     serializer = InformationPostSerializer(every_informations, many=True)
 
     for x in serializer.data:
