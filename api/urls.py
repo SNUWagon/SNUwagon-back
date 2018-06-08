@@ -34,6 +34,9 @@ urlpatterns = [
     url(r'notifications$', notification_views.notification, name='notifications'),
     url(r'newsfeed$', notification_views.newsfeed, name='newsfeed'),
 
+    url(r'watchtags$', notification_views.watchtags, name='watch_tags'),
+
+
     url(r'vote$', vote_views.vote, name='vote'),
     url(r'vote/(?P<id>[0-9]+)$', vote_views.vote, name='vote_by_id'),
     url(r'debug/verify/(?P<username>[\s\S]+)$', debug_views.verify, name='debug_verify'),

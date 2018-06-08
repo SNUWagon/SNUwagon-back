@@ -40,6 +40,8 @@ def information(request, id=None):
 
     if request.method == 'POST':
         mutable_data = request.data.copy()
+        if 'tags' not in mutable_data.keys():
+            mutable_data['tags'] = []
 
         user = User.objects.get(username=request.data['username'])
         profile = Profile.objects.get(user=user)
@@ -54,10 +56,24 @@ def information(request, id=None):
 
         serializer = InformationPostSerializer(data=mutable_data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        # generate notifications
+        notification_dict = {}
+        for tag in mutable_data['tags']:
+            for x in Profile.objects.filter(watch_tags__contains=[tag]):
+                if x not in notification_dict.keys():
+                    notification_dict[x] = tag
+
+        for profile in notification_dict.keys():
+            message_string = 'There is new information about #' + notification_dict[profile]
+            generate_notification(profile_id=profile.id, notification_type='new_information_about_tag',
+                                  content_id=serializer.data['id'], message=message_string)
+
+        return generate_response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'DELETE':
 

@@ -72,3 +72,20 @@ def newsfeed(request):
         notification.save()
 
         return generate_response(status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def watchtags(request):
+
+    # Check user login
+    if not request.user.is_authenticated:
+        return generate_response(message='Not logged in', status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'POST':
+
+        user = User.objects.get(username=request.user.username)
+        profile = Profile.objects.get(user=user)
+        profile.watch_tags = request.data['tags']
+        profile.save()
+
+        return generate_response(status=status.HTTP_200_OK)
