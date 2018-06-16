@@ -26,6 +26,7 @@ def information(request, id=None):
 
             # return author name for 'author' field
             mutable_data = serializer.data.copy()
+            mutable_data['author_id'] = mutable_data['author']
             author = Profile.objects.get(pk=mutable_data['author'])
             mutable_data['author'] = author.user.username
 

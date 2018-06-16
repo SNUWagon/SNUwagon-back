@@ -22,8 +22,15 @@ def generate_notification(profile_id, notification_type, content_id, message):
         print(notification_serializer.errors)
 
 
+def cleanup_notification():
+    every_notifications = Notification.objects.filter(pushed=True, read=True)
+    every_notifications.delete()
+
+
 @api_view(['GET'])
 def notification(request):
+
+    cleanup_notification()
 
     # Check user login
     if not request.user.is_authenticated:
@@ -46,6 +53,8 @@ def notification(request):
 
 @api_view(['GET', 'PUT'])
 def newsfeed(request):
+
+    cleanup_notification()
 
     # Check user login
     if not request.user.is_authenticated:
