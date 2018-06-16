@@ -90,6 +90,14 @@ class QuestionListTests(TestCase):
         response = client.get(path=path)
         self.assertEqual(response.status_code, 200)
 
+    def test_cleanup_question(self):
+        create_question(title='te2st title', content='test content', due='2015-03-03T04:02:32.142923Z')
+        create_question(title='te3st title', content='test content', due='2015-03-03T04:02:32.142923Z')
+        client = Client()
+        path = reverse('question_list')
+        response = client.get(path=path)
+        self.assertEqual(response.status_code, 200)
+
 
 class InformationListTests(TestCase):
 

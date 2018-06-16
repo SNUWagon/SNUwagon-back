@@ -4,14 +4,26 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from utils.response import generate_response
 from api.serializers import QuestionPostSerializer, InformationPostSerializer
-from api.models import QuestionPost, Profile, User, InformationPost
+from api.models import QuestionPost, Profile, User, InformationPost, QuestionAnswer
 from django.utils import timezone
 import operator
+
+
+def cleanup_question():
+    every_questions = QuestionPost.objects.filter(due__lt=timezone.localtime()).order_by('-created')
+    for question in every_questions:
+        author = question.author
+        answer_cnt = QuestionAnswer.objects.filter(question=question).count()
+        if answer_cnt == 0:
+            author.credit += question.bounty
+            author.save()
+            question.delete()
 
 
 @swagger_auto_schema(methods=['get'], responses={200: QuestionPostSerializer})
 @api_view(['GET'])
 def questions(request):
+    cleanup_question()
     every_questions = QuestionPost.objects.filter(due__gte=timezone.localtime()).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
 
@@ -24,6 +36,7 @@ def questions(request):
 
 @api_view(['GET'])
 def questions_with_tag(request, tag):
+    cleanup_question()
     every_questions = QuestionPost.objects.\
         filter(tags__contains=[tag], due__gte=timezone.localtime()).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
@@ -42,6 +55,7 @@ def questions_with_type(request, type):
 
 @api_view(['GET'])
 def questions_with_title(request, title):
+    cleanup_question()
     every_questions = QuestionPost.objects.\
         filter(title__icontains=title, due__gte=timezone.localtime()).order_by('-created')
     serializer = QuestionPostSerializer(every_questions, many=True)
