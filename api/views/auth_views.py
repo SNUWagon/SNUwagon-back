@@ -50,6 +50,9 @@ def signup(request):
         if not (username and password and email):
             return generate_response(message='Parameters are not given', status=status.HTTP_401_UNAUTHORIZED)
 
+        if User.objects.filter(email=email).count() > 0:
+            return generate_response(message='Duplicate email', status=status.HTTP_401_UNAUTHORIZED)
+
         ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         salted_username = username
         for i in range(5):
