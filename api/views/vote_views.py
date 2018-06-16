@@ -32,6 +32,14 @@ def vote(request, id=None):
         data['post'] = id
         data['weight'] = 1
 
+        information = InformationPost.objects.get(pk=id)
+        author = Profile.objects.get(pk=information.author.id)
+        if data['vote_type'] == 'upvote':
+            author.credit += 2
+        else:
+            author.credit -= 2
+        author.save()
+
         serializer = VoteSerializer(data=data)
         if not serializer.is_valid():
             return generate_response(message='Invalid parameters', status=status.HTTP_400_BAD_REQUEST)
