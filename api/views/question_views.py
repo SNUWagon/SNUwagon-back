@@ -22,6 +22,9 @@ def question(request, id=None):
     if request.method == 'GET':
 
         try:
+            if not QuestionPost.objects.filter(pk=id).exists():
+                return generate_response(message="No question found", status=status.HTTP_404_NOT_FOUND)
+
             question_object = QuestionPost.objects.get(pk=id)
             serializer = QuestionPostSerializer(question_object)
 
