@@ -64,7 +64,7 @@ def signup(request):
             return generate_response(message='Duplicate username or email', status=status.HTTP_401_UNAUTHORIZED)
 
         mail_subject = '[SNUWagon] Please confirm your email'
-        message = 'http://www.snuwagon.com:8000/api/auth/verification/' + hashstring
+        message = 'http://www.snuwagon.com/api/auth/verification/' + hashstring
         to = [email]
         email = EmailMessage(
             mail_subject, message, to=to
@@ -80,7 +80,7 @@ def verification(request, hashstring):
     profile = Profile.objects.get(hashstring=hashstring)
     profile.verified = True
     profile.save()
-    return redirect('http://www.snuwagon.com:3000/')
+    return redirect('http://www.snuwagon.com/')
 
 
 @swagger_auto_schema(methods=['get'], responses={200: 'success'})
