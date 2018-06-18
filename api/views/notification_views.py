@@ -41,7 +41,9 @@ def notification(request):
         user = User.objects.get(username=request.user.username)
         profile = Profile.objects.get(user=user)
 
-        every_notifications = Notification.objects.filter(profile=profile, pushed=False)
+        every_notifications = Notification.objects.filter(profile=profile, pushed=False)\
+            .order_by('-created')
+
         serializer = NotificationSerializer(every_notifications, many=True)
 
         response = generate_response(serializer.data, status=status.HTTP_200_OK)
@@ -65,7 +67,8 @@ def newsfeed(request):
         user = User.objects.get(username=request.user.username)
         profile = Profile.objects.get(user=user)
 
-        every_notifications = Notification.objects.filter(profile=profile, read=False)
+        every_notifications = Notification.objects.filter(profile=profile, read=False)\
+            .order_by('-created')
         serializer = NotificationSerializer(every_notifications, many=True)
 
         response = generate_response(serializer.data, status=status.HTTP_200_OK)
